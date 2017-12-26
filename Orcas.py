@@ -58,7 +58,9 @@ from RTD_Analytics import RTD_Analytics
 reload(sys)
 sys.setdefaultencoding("gb2312")
 
-orcas_user = 'HFan'
+import getpass
+# orcas_user = 'HFan'
+orcas_user = getpass.getuser()
 
 class Orcas_Wrapper(Tkinter.Frame):
 	def __init__(self, master=None):
