@@ -1,0 +1,8 @@
+Index,x,Betas,Lower_Bound,Upper_Bound,Default,Desc
+1,intercept,-2.80391927,1,1,1,Intercept
+2,mob*(mob<=3),-0.27268843,0,3,1,"MOB = 1,2,3"
+3,mob*(mob>3),0.06746096,0,7,4,"MOB = 4,5,6,7"
+4,mob>3,-1.08090628,0,1,0,MOB>3
+5,gender,0.16819435,0,1,1,Gender
+6,amt_lt_1000,0.98596153,0,1,0,Amount <=1000
+7,amt_bt_1000_2500,0.43621725,0,1,1,"Amount Between 1000,2500"
