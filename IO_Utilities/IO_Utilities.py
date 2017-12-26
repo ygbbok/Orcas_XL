@@ -22,7 +22,7 @@ class IO_Util(object):
 	def open_in_html(df_IN, prefix_IN = ''):
 		html_page = prefix_IN + ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 		# html_dir = 'F:\Work\Bohai Huijin Asset Management\Investment\Orcas\Temp\\' + html_page + '.html'
-		html_dir = 'E:\BHHJ\Code\Orcas\Temp\\' + html_page + '.html'
+		html_dir = Config.temp_html_dir + html_page + '.html'
 		file_handler= open(html_dir,'w')
 		file_handler.write(df_IN.to_html())
 		file_handler.close()
@@ -39,9 +39,6 @@ class SQL_Util(object):
 
 	@staticmethod
 	def query_sql_procedure(sql_script_IN, table_res_IN = 1,database = Config.cracked_tables_prod_db):
-		print "**************************echo**************************"
-		print sql_script_IN
-		print "**************************echo**************************"
 		if table_res_IN > 0:
 			sql_script = "set nocount on\n"
 			con = pyodbc.connect(driver='{SQL Server Native Client 11.0}', host = Config.sql_server, database=database,trusted_connection='yes',autocommit=True)
