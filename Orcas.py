@@ -7,7 +7,10 @@ reload(sys)
 sys.setdefaultencoding( "gb2312" )
 
 # sys.path.append("F:\Work\Bohai Huijin Asset Management\Investment\Orcas_Killer\Strats_Analytics\\")
-sys.path.append("E:\BHHJ\Code\Orcas\Strats_Analytics\\")
+#sys.path.append("E:\BHHJ\Code\Orcas\Strats_Analytics\\")
+Orcas_dir = os.path.dirname(__file__)
+# print os.path.join(Orcas_dir, 'Strats_Analytics\\')
+sys.path.append(os.path.join(Orcas_dir, 'Strats_Analytics\\'))
 
 
 import pandas as pd
