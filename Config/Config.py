@@ -3,6 +3,7 @@
 import pandas as pd
 import locale
 import sys
+import getpass
 
 
 Formatter_pct2 = lambda x: "{:.2%}".format(x)
@@ -42,8 +43,12 @@ Formatter_pct2 = lambda x: "{:.2%}".format(x)
 
 #
 # ********************** Database **********************
+user_sql_dict = {"Hong Fan":{"sql_server":'(localdb)\MSSQLLocalDB'},
+	"liuxiao":{"sql_server":"liuxiao-PC"}}
+
 #sql_server = "(localdb)\MSSQLLocalDB"
-sql_server = "liuxiao-PC"
+#sql_server = "liuxiao-PC"
+sql_server = user_sql_dict[getpass.getuser()]['sql_server']
 staging_tables_db = "marketplace_lending_staging_tables"
 cracked_tables_dev_db = "marketplace_lending_cracked_dev_tables"
 cracked_tables_prod_db = "marketplace_lending_cracked_prod_tables"
@@ -136,5 +141,5 @@ format_mapping = {
 }
 
 struct_info_pkl = os.path.join(Orcas_dir, 'Struct_Specifics\\', '1.Struct_Info', '.pkl')
-print struct_info_pkl
+
 # ********************** Strats **********************
