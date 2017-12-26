@@ -21,9 +21,7 @@ import matplotlib.pyplot as plt
 sys.path.append("F:\Work\Bohai Huijin Asset Management\Investment\Orcas\\")
 
 from IO_Utilities import IO_Utilities
-# **********************************
-# comment by Hong Fan
-# **********************************
+
 Formatter_pct2 = lambda x: "{:.2%}".format(x)
 Formatter_pct1 = lambda x: "{:.1%}".format(x)
 Formatter_pct0 = lambda x: "{:.0%}".format(x)
