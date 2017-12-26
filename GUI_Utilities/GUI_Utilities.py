@@ -17,7 +17,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 # from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTKAgg as NavigationToolbar
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
-
+# *****************************************************
+# commeng by Hong Fan
+# *****************************************************
 sys.path.append("F:\Work\Bohai Huijin Asset Management\Investment\Orcas\\")
 
 from IO_Utilities import IO_Utilities
