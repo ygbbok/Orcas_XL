@@ -26,6 +26,7 @@ Static_Pool_Folder = os.path.join(Orcas_dir, 'Static_Pool\\')
 Unlevered_Economics_Run_Folder = os.path.join(Orcas_dir, 'Unlevered_Economics_Run\\')
 
 Mgmt_Unlevered_Economics_Run_File = os.path.join(Orcas_dir, 'Unlevered_Economics_Run\Mgmt_Unlevered_Economics_Run.pickle')
+Mgmt_Levered_Economics_Run_File = os.path.join(Orcas_dir, 'Levered_Economics_Run\Mgmt_Levered_Economics_Run.pickle')
 
 ORCAS_ICON = os.path.join(Orcas_dir, 'LOGO_TITLE\ORCAS_ICON.ico')
 
