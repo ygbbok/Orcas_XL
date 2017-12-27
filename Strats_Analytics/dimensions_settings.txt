@@ -1,3 +1,0 @@
-column|group_rule|strats_label
-性别||gender
-省份||pro

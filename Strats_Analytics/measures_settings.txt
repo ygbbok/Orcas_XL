@@ -1,2 +1,0 @@
-column|calc_method|calc_helper|col_name|format
-·Å¿î½ð¶î|Sum||amt|Dec 2
