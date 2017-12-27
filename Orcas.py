@@ -106,6 +106,9 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		self.Mgmt_Static_Pool_list = [unicode(item) for item in list(self.Mgmt_Static_Pool_df[u'资产池编号'].astype(str) + " - " + self.Mgmt_Static_Pool_df[u'资产池名称'].astype(str))]
 		self.Mgmt_Unlevered_Economics_df = pd.read_pickle(Config.Mgmt_Unlevered_Economics_Run_File)
+		self.Mgmt_Levered_Economics_df = pd.read_pickle(Config.Mgmt_Levered_Economics_Run_File)
+
+
 		self.UnleveredEconomicsPage_design()
 		self.notebook.add(self.UnleveredEconomicsPage_Frame, text=u"资产池现金流分析")
 
@@ -1248,6 +1251,9 @@ class Orcas_Wrapper(Tkinter.Frame):
 			
 			dispaly_leveredeconomics_charts_mgmt_instance = GUI_Utilities.Display_LeveredEconomics_Charts_Mgmt_OrcasFormat(self.grand_right_upper_frame,self.Levered_Economics_Mgmt_instance)
 
+
+
+		self.Mgmt_Levered_Economics_Run_treeview = GUI_Utilities.Treeview_Mgmt(master = financingmgmt_line_6, df_IN = self.Mgmt_Levered_Economics_df)
 
 
 		self.runLeveredEconomics_Button = Tkinter.Button(financingmgmt_line_6, text = u"新创现金流分析(含融资)", command = runLeveredEconomics,bg = Config.Orcas_blue)
