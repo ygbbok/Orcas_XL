@@ -19,13 +19,12 @@ sys.setdefaultencoding( "gb2312" )
 from tkinter import Tk, StringVar, ttk
 from Tkinter import *
 from Tkinter import END
-# sys.path.append("F:\Work\Bohai Huijin Asset Management\Investment\Orcas\\")
+
 
 from IO_Utilities import IO_Utilities
 from RTD_Analytics import RTD_Analytics
 
-
-class Strats_settings(Tkinter.Frame):
+class Vintage_settings(Tkinter.Frame):
 	def __init__(self, master=None):
 		Tkinter.Frame.__init__(self, master)
 		self.pack()
@@ -35,7 +34,7 @@ class Strats_settings(Tkinter.Frame):
 		self.line_1_frame = Tkinter.Frame(self.frame)
 		self.line_1_frame.pack(side = 'top',expand = 'yes',fill = 'x')
 
-		self.label_Strats_Settings = Tkinter.Label(self.line_1_frame, text = "                                                      分层统计参数设置                                                       ",borderwidth = 2,relief = 'ridge')
+		self.label_Strats_Settings = Tkinter.Label(self.line_1_frame, text = "                                                      分批次资产分析参数设置                                                       ",borderwidth = 2,relief = 'ridge')
 		self.label_Strats_Settings.pack(side = TOP)
 
 		self.line_2_frame = Tkinter.Frame(self.frame)
@@ -56,12 +55,12 @@ class Strats_settings(Tkinter.Frame):
 		self.line_3_right_frame = Tkinter.Frame(self.line_3_frame)
 		self.line_3_right_frame.pack(side = 'left', expand = 'yes', fill = 'x',padx = 3)
 
-		self.label_Sort_By = Tkinter.Label(self.line_3_left_frame, text = '排序度量编号:',width = 6,anchor = 'w')
+		self.label_Sort_By = Tkinter.Label(self.line_3_left_frame, text = '贷款编号字段:',width = 6,anchor = 'w')
 		self.label_Sort_By.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
 		self.text_Sort_By = Tkinter.Text(self.line_3_left_frame, height = 1, width = 5)
 		self.text_Sort_By.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
 
-		self.label_Display_Top_N = Tkinter.Label(self.line_3_right_frame, text = '显示靠前记录:',width = 6,anchor = 'w')
+		self.label_Display_Top_N = Tkinter.Label(self.line_3_right_frame, text = '时间先后顺序字段:',width = 6,anchor = 'w')
 		self.label_Display_Top_N.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
 		self.text_Display_Top_N = Tkinter.Text(self.line_3_right_frame, height = 1, width = 5)
 		self.text_Display_Top_N.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
@@ -70,13 +69,13 @@ class Strats_settings(Tkinter.Frame):
 		self.line_4_frame = Tkinter.Frame(self.frame)
 		self.line_4_frame.pack(side = 'top',expand = 'yes',fill = 'x')
 
-		self.label_Strats_Settings = Tkinter.Label(self.line_4_frame, text = "                                                      分层统计设置记录                                                      ",borderwidth = 2,relief = 'ridge')
+		self.label_Strats_Settings = Tkinter.Label(self.line_4_frame, text = "                                                      分批次资产分析设置记录                                                      ",borderwidth = 2,relief = 'ridge')
 		self.label_Strats_Settings.pack(side = TOP)
 
 		self.line_5_frame = Tkinter.Frame(self.frame)
 		self.line_5_frame.pack(side = 'top',expand = 'yes',fill = 'x')
 
-		self.label_Strats_Idx = Tkinter.Label(self.line_5_frame, text = "分层统计设置序号:")
+		self.label_Strats_Idx = Tkinter.Label(self.line_5_frame, text = "分批次资产分析设置序号:")
 		self.label_Strats_Idx.pack(side = LEFT)
 
 		self.Static_strVar = Tkinter.StringVar()
@@ -95,10 +94,10 @@ class Strats_settings(Tkinter.Frame):
 		self.line_6_frame = Tkinter.Frame(self.frame)
 		self.line_6_frame.pack(side = 'top',expand = 'yes',fill = 'x')
 
-		self.label_Strats_Name = Tkinter.Label(self.line_6_frame, text = "分层统计设置名称:",width = 15,anchor = 'w')
+		self.label_Strats_Name = Tkinter.Label(self.line_6_frame, text = "分批次资产分析设置名称:",width = 20,anchor = 'w')
 		self.label_Strats_Name.pack(side = "left")
 
-		self.text_Strats_Name = Tkinter.Text(self.line_6_frame, height = 1, width = 15)
+		self.text_Strats_Name = Tkinter.Text(self.line_6_frame, height = 1, width = 10)
 		self.text_Strats_Name.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
 
 

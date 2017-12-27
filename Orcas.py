@@ -52,11 +52,12 @@ import Strats_Analytics
 import Strats_Display
 from RTD_Analytics import RTD_Analytics
 
+# Vintage Analysis related
+from Vintage import Vintage_Interface
 reload(sys)
 sys.setdefaultencoding("gb2312")
 
 import getpass
-# orcas_user = 'HFan'
 orcas_user = getpass.getuser()
 
 class Orcas_Wrapper(Tkinter.Frame):
@@ -213,7 +214,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.databasetable_strVar = Tkinter.StringVar()
 		self.databasetable_option = ttk.Combobox(staticpoolpage_line_2, textvariable=self.databasetable_strVar, values=Config.production_table_list)
 
-		# self.databasetable_option = Tkinter.OptionMenu(staticpoolpage_line_2, self.databasetable_strVar, *Config.production_table_list)
 		self.databasetable_strVar.set(Config.production_table_list[0])
 		self.databasetable_option.pack(side = 'left')
 
@@ -310,8 +310,8 @@ class Orcas_Wrapper(Tkinter.Frame):
 			cashflow_engine_instance = cashloan_ctc_mode.cashloan_ctc_mode(credit_model_instance.static_pool, credit_model_instance.smm_matrix,credit_model_instance.mdr_matrix,sev_level,recovery_lag)
 
 		cashflow_engine_instance.run_cashflow()
-		# Cashflow Engine Finished
 
+		# Cashflow Engine Finished
 		new_unlevered_economics_run_num = max(self.Mgmt_Unlevered_Economics_df[u'资产池分析实例编号']) + 1
 		
 		output = open(Config.Unlevered_Economics_Run_Folder + str(new_unlevered_economics_run_num) + '.ll.pkl', 'wb')
@@ -457,7 +457,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.creditmodel_strVar = Tkinter.StringVar()
 		self.creditmodel_option = ttk.Combobox(unleveredeconomics_line_1_left_1,textvariable = self.creditmodel_strVar, values = Config.creditmodel_list)
 		self.creditmodel_option.bind("<<ComboboxSelected>>", credit_model_gui_pop)
-		# self.creditmodel_option = Tkinter.OptionMenu(unleveredeconomics_line_1_left, self.creditmodel_strVar, *Config.creditmodel_list,command = credit_model_gui_pop)
 		self.creditmodel_strVar.set(Config.creditmodel_list[0])
 
 
@@ -1278,7 +1277,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		self.Mgmt_Levered_Economics_Run_treeview = GUI_Utilities.Treeview_Mgmt(master = financingmgmt_line_6, df_IN = self.Mgmt_Levered_Economics_df)
 
-		newFinancingStructure_label = Tkinter.Label(financingmgmt_line_7,text = u"融资结构名称")
+		newFinancingStructure_label = Tkinter.Label(financingmgmt_line_7,text = u"融资结构名称",relief = 'ridge')
 		newFinancingStructure_label.pack(side = 'left',fill = 'x',expand='yes')
 
 		self.newFinancingStructure_entry = Tkinter.Entry(financingmgmt_line_7,width = 2,bg = Config.Orcas_blue)
@@ -1431,6 +1430,152 @@ class Orcas_Wrapper(Tkinter.Frame):
 	def VintageAnalysisPage_design(self):
 		self.VintageAnalysisPage_Frame = Tkinter.Frame(self.grand_left_frame)
 		self.VintageAnalysisPage_Frame.pack(expand=1, fill="both")
+
+		self.VintageAnalysisPage_Upper_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Frame,width = 600,height = 100,borderwidth = 2)
+		self.VintageAnalysisPage_Upper_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+		self.VintageAnalysisPage_Upper_Frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_Middle_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Frame,width = 600,height = 400,borderwidth = 2)
+		self.VintageAnalysisPage_Middle_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+		self.VintageAnalysisPage_Middle_Frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_Lower_Frame = Tkinter.Frame(self.VintageAnalysisPage_Frame)
+		self.VintageAnalysisPage_Lower_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+
+		self.VintageAnalysisPage_Middle_1_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_Frame,width = 600,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_Middle_1_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+		self.VintageAnalysisPage_Middle_1_Frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_Middle_2_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_Frame,width = 600,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_Middle_2_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+		self.VintageAnalysisPage_Middle_2_Frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_221_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_1_Frame,width = 300,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_221_frame.pack(side = 'left',anchor = 'n')
+		self.VintageAnalysisPage_221_frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_222_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_1_Frame,width = 300,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_222_frame.pack(side = 'left',anchor = 'n')
+		self.VintageAnalysisPage_222_frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_223_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_2_Frame,width = 300,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_223_frame.pack(side = 'left',anchor = 'n')
+		self.VintageAnalysisPage_223_frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_224_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_2_Frame,width = 300,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_224_frame.pack(side = 'left',anchor = 'n')
+		self.VintageAnalysisPage_224_frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_left_line_2_frame = Tkinter.Frame(self.VintageAnalysisPage_Upper_Frame)
+		self.VintageAnalysisPage_left_line_2_frame.pack(side = 'top')
+		self.strats_gui_mgmt = Vintage_Interface.Vintage_settings(self.VintageAnalysisPage_left_line_2_frame)
+
+		self.VintageAnalysisPage_right_line_1_frame = Tkinter.Frame(self.VintageAnalysisPage_221_frame)
+		self.VintageAnalysisPage_right_line_1_frame.pack(side = 'top', fill ='both', expand = 'yes')
+		self.VintageAnalysisPage_right_line_1_canvas = Tkinter.Canvas(self.VintageAnalysisPage_right_line_1_frame, width=800, height=500, bg="white")
+		self.VintageAnalysisPage_right_line_1_new_frame = Tkinter.Frame(self.VintageAnalysisPage_right_line_1_canvas)
+
+		ysb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_1_frame,orient='vertical', command= self.VintageAnalysisPage_right_line_1_canvas.yview)
+		self.VintageAnalysisPage_right_line_1_canvas.configure(yscrollcommand=ysb.set)
+		ysb.pack(side = 'right',fill = 'y')
+
+		xsb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_1_frame, orient='horizontal', command= self.VintageAnalysisPage_right_line_1_canvas.xview)
+		self.VintageAnalysisPage_right_line_1_canvas.configure(xscrollcommand=xsb.set)
+		xsb.pack(side = 'bottom',fill = 'x')
+
+		self.VintageAnalysisPage_right_line_1_canvas.pack(side = 'left')
+		self.VintageAnalysisPage_right_line_1_canvas.create_window((0,1), window=self.VintageAnalysisPage_right_line_1_new_frame, anchor="nw")
+
+		def reconfigure_scrollregion1(event):
+			self.VintageAnalysisPage_right_line_1_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_1_canvas.bbox("all"))
+
+		self.VintageAnalysisPage_right_line_1_new_frame.bind("<Configure>",reconfigure_scrollregion1)
+
+		self.strats_dimension_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_1_new_frame,title_list_IN=Config.vintage_dimension_settings_columns_gui,BoxGroup_width_IN = 9,Label_width_IN = 11,add_condition_button_text_IN = u'添加维度',delete_condition_button_text_IN = u'删除维度',style_IN = 'ComboBox')
+
+		self.VintageAnalysisPage_right_line_2_frame = Tkinter.Frame(self.VintageAnalysisPage_222_frame)
+		self.VintageAnalysisPage_right_line_2_frame.pack(side = 'top', fill ='both', expand = 'yes')
+		self.VintageAnalysisPage_right_line_2_canvas = Tkinter.Canvas(self.VintageAnalysisPage_right_line_2_frame, width=800, height=500, bg="white")
+		self.VintageAnalysisPage_right_line_2_new_frame = Tkinter.Frame(self.VintageAnalysisPage_right_line_2_canvas)
+
+		ysb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_2_frame,orient='vertical', command= self.VintageAnalysisPage_right_line_2_canvas.yview)
+		self.VintageAnalysisPage_right_line_2_canvas.configure(yscrollcommand=ysb.set)
+		ysb.pack(side = 'right',fill = 'y')
+
+		xsb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_2_frame, orient='horizontal', command= self.VintageAnalysisPage_right_line_2_canvas.xview)
+		self.VintageAnalysisPage_right_line_2_canvas.configure(xscrollcommand=xsb.set)
+		xsb.pack(side = 'bottom',fill = 'x')
+
+		self.VintageAnalysisPage_right_line_2_canvas.pack(side = 'left')
+		self.VintageAnalysisPage_right_line_2_canvas.create_window((0,1), window=self.VintageAnalysisPage_right_line_2_new_frame, anchor="nw")
+
+		def reconfigure_scrollregion2(event):
+			self.VintageAnalysisPage_right_line_2_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_2_canvas.bbox("all"))
+		self.VintageAnalysisPage_right_line_2_new_frame.bind("<Configure>",reconfigure_scrollregion2)
+
+		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_2_new_frame,
+			title_list_IN=Config.vintage_measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加指标',
+			delete_condition_button_text_IN = u'删除指标',style_IN = 'ComboBox')
+
+
+		self.VintageAnalysisPage_right_line_3_frame = Tkinter.Frame(self.VintageAnalysisPage_223_frame)
+		self.VintageAnalysisPage_right_line_3_frame.pack(side = 'top', fill ='both', expand = 'yes')
+		self.VintageAnalysisPage_right_line_3_canvas = Tkinter.Canvas(self.VintageAnalysisPage_right_line_3_frame, width=800, height=500, bg="white")
+		self.VintageAnalysisPage_right_line_3_new_frame = Tkinter.Frame(self.VintageAnalysisPage_right_line_3_canvas)
+
+		ysb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_3_frame,orient='vertical', command= self.VintageAnalysisPage_right_line_3_canvas.yview)
+		self.VintageAnalysisPage_right_line_3_canvas.configure(yscrollcommand=ysb.set)
+		ysb.pack(side = 'right',fill = 'y')
+
+		xsb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_3_frame, orient='horizontal', command= self.VintageAnalysisPage_right_line_3_canvas.xview)
+		self.VintageAnalysisPage_right_line_3_canvas.configure(xscrollcommand=xsb.set)
+		xsb.pack(side = 'bottom',fill = 'x')
+
+		self.VintageAnalysisPage_right_line_3_canvas.pack(side = 'left')
+		self.VintageAnalysisPage_right_line_3_canvas.create_window((0,1), window=self.VintageAnalysisPage_right_line_3_new_frame, anchor="nw")
+
+		def reconfigure_scrollregion3(event):
+			self.VintageAnalysisPage_right_line_3_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_3_canvas.bbox("all"))
+		self.VintageAnalysisPage_right_line_3_new_frame.bind("<Configure>",reconfigure_scrollregion3)
+
+		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_3_new_frame,
+			title_list_IN=Config.vintage_measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加指标',
+			delete_condition_button_text_IN = u'删除指标',style_IN = 'ComboBox')
+
+
+
+		self.VintageAnalysisPage_right_line_4_frame = Tkinter.Frame(self.VintageAnalysisPage_224_frame)
+		self.VintageAnalysisPage_right_line_4_frame.pack(side = 'top', fill ='both', expand = 'yes')
+		self.VintageAnalysisPage_right_line_4_canvas = Tkinter.Canvas(self.VintageAnalysisPage_right_line_4_frame, width=800, height=500, bg="white")
+		self.VintageAnalysisPage_right_line_4_new_frame = Tkinter.Frame(self.VintageAnalysisPage_right_line_4_canvas)
+
+		ysb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_4_frame,orient='vertical', command= self.VintageAnalysisPage_right_line_4_canvas.yview)
+		self.VintageAnalysisPage_right_line_4_canvas.configure(yscrollcommand=ysb.set)
+		ysb.pack(side = 'right',fill = 'y')
+
+		xsb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_4_frame, orient='horizontal', command= self.VintageAnalysisPage_right_line_4_canvas.xview)
+		self.VintageAnalysisPage_right_line_4_canvas.configure(xscrollcommand=xsb.set)
+		xsb.pack(side = 'bottom',fill = 'x')
+
+		self.VintageAnalysisPage_right_line_4_canvas.pack(side = 'left')
+		self.VintageAnalysisPage_right_line_4_canvas.create_window((0,1), window=self.VintageAnalysisPage_right_line_4_new_frame, anchor="nw")
+
+		def reconfigure_scrollregion4(event):
+			self.VintageAnalysisPage_right_line_4_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_4_canvas.bbox("all"))
+		self.VintageAnalysisPage_right_line_4_new_frame.bind("<Configure>",reconfigure_scrollregion4)
+
+		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_4_new_frame,
+			title_list_IN=Config.vintage_measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加指标',
+			delete_condition_button_text_IN = u'删除指标',style_IN = 'ComboBox')
+
+
+		def run_vintage_analysis(events = None):
+			print "to be deleloped"
+
+
+		self.vintageanalysispage_run_vintage_button = Tkinter.Button(self.VintageAnalysisPage_Lower_Frame,text = u"批次分析", command = run_vintage_analysis,bg = Config.Orcas_blue)
+		self.vintageanalysispage_run_vintage_button.pack(side = 'left',anchor = 'w')
+		self.vintageanalysispage_run_vintage_button.bind("<Button-3>", run_vintage_analysis)
 
 def main():
 	root = Tkinter.Tk()

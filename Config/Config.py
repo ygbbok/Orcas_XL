@@ -112,3 +112,9 @@ format_mapping = {
 struct_info_pkl = os.path.join(Orcas_dir, 'Struct_Specifics\\', '1.Struct_Info', '.pkl')
 
 # ********************** Strats **********************
+
+# ********************** Vintage **********************
+vintage_dimension_settings_columns_gui = [u'字段',u'组合规则',u'分层标签']
+vintage_measures_settings_columns_gui =  [u'字段',u'计算方式',u'运算辅助列',u'度量名称']
+
+# ********************** Vintage **********************
