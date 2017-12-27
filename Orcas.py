@@ -100,11 +100,15 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.StratsPage_design()
 		self.notebook.add(self.StratsPage_Frame, text="统计分层分析")
 
+		self.VintageAnalysisPage_design()
+		self.notebook.add(self.VintageAnalysisPage_Frame, text="Vintage Analysis")
+
 		self.Mgmt_Static_Pool_df = pd.read_pickle(Config.Mgmt_Static_Pool_File)
 		self.StaticPoolPage_design()
 		self.notebook.add(self.StaticPoolPage_Frame, text=u"资产池")
 
-		self.Mgmt_Static_Pool_list = [unicode(item) for item in list(self.Mgmt_Static_Pool_df[u'资产池编号'].astype(str) + " - " + self.Mgmt_Static_Pool_df[u'资产池名称'].astype(str))]
+		self.Mgmt_Static_Pool_list = [unicode(item) for item in list(self.Mgmt_Static_Pool_df[u'资产池编号'].astype(str) + " - "
+			+ self.Mgmt_Static_Pool_df[u'资产池名称'].astype(str))]
 		self.Mgmt_Unlevered_Economics_df = pd.read_pickle(Config.Mgmt_Unlevered_Economics_Run_File)
 		self.Mgmt_Levered_Economics_df = pd.read_pickle(Config.Mgmt_Levered_Economics_Run_File)
 
@@ -114,8 +118,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		self.FinancingMgmtPage_design()
 		self.notebook.add(self.FinancingMgmtPage_Frame, text="ABS结构化融资分析")
-
-
 
 		self.cashflow_df = pd.DataFrame()
 
@@ -160,7 +162,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.StaticPoolPage_Frame.pack(expand=1, fill="both")
 		
 
-
 		def deleteStaticPool():
 			for selected in self.Mgmt_Static_Pool_treeview.tree.selection():
 				selected_values = self.Mgmt_Static_Pool_treeview.tree.item(selected,'values')
@@ -198,14 +199,15 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 			IO_Utilities.IO_Util.open_in_html(self.live_static_pool_df)
 
-		staticpoolpage_part_1 = Tkinter.LabelFrame(self.StaticPoolPage_Frame,borderwidth = 2, width = 360, height = 60)
+		staticpoolpage_part_1 = Tkinter.LabelFrame(self.StaticPoolPage_Frame,borderwidth = 2, width = 600, height = 60)
 		staticpoolpage_part_1.pack()
 		staticpoolpage_part_1.pack_propagate(False)
 
 		staticpoolpage_line_1 = Tkinter.Frame(staticpoolpage_part_1,pady = 2)
 		staticpoolpage_line_1.pack(side = "top")
 
-		self.CreateStaticPool_Button = Tkinter.Button(staticpoolpage_line_1, text = u"建立资产池", command = self.createStaticPool,bg=Config.Orcas_blue,width = 12)
+		self.CreateStaticPool_Button = Tkinter.Button(staticpoolpage_line_1, text = u"建立资产池", command = self.createStaticPool,
+			bg=Config.Orcas_blue,width = 12)
 		self.CreateStaticPool_Button.pack(side='left')
 
 		self.DeleteStaticPool_Button = Tkinter.Button(staticpoolpage_line_1, text = u"移除资产池", command = deleteStaticPool,width = 12)
@@ -227,18 +229,18 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.databasetable_strVar.set(Config.production_table_list[0])
 		self.databasetable_option.pack(side = 'left')
 
-		staticpoolpage_part_2 = Tkinter.LabelFrame(self.StaticPoolPage_Frame, borderwidth = 0, width = 360, height = 30)
+		staticpoolpage_part_2 = Tkinter.LabelFrame(self.StaticPoolPage_Frame, borderwidth = 0, width = 600, height = 30)
 		staticpoolpage_part_2.pack()
 		staticpoolpage_part_2.pack_propagate(False)
 
 		staticpoolpage_line_3 = Tkinter.Frame(staticpoolpage_part_2)
 		staticpoolpage_line_3.pack(side = "top")
 
-		self.StaticPoolName_TextBox = Tkinter.Entry(staticpoolpage_line_3, width=50,bg=Config.Orcas_blue)
+		self.StaticPoolName_TextBox = Tkinter.Entry(staticpoolpage_line_3, width=60,bg=Config.Orcas_blue)
 		self.StaticPoolName_TextBox.insert(0,u"请输入资产池名称")
 		self.StaticPoolName_TextBox.pack(side = 'top')
 
-		staticpoolpage_part_3 = Tkinter.LabelFrame(self.StaticPoolPage_Frame,borderwidth = 2, width = 360, height = 100)
+		staticpoolpage_part_3 = Tkinter.LabelFrame(self.StaticPoolPage_Frame,borderwidth = 2, width = 600, height = 100)
 		staticpoolpage_part_3.pack()
 		staticpoolpage_part_3.pack_propagate(False)
 
@@ -248,16 +250,17 @@ class Orcas_Wrapper(Tkinter.Frame):
 		databasetable_optionmenu_label = Tkinter.Label(staticpoolpage_line_4,text = "请放入静态池全部贷款编号(或选)")
 		databasetable_optionmenu_label.pack(side = 'top')
 
-		self.StaticPool_text = Tkinter.Text(staticpoolpage_line_4,width = 50,height = 5)
+		self.StaticPool_text = Tkinter.Text(staticpoolpage_line_4,width = 60,height = 5)
 		self.StaticPool_text.pack(side = 'top')
 
-		staticpoolpage_part_4 = Tkinter.LabelFrame(self.StaticPoolPage_Frame,borderwidth = 2, width = 360, height = 100)
+		staticpoolpage_part_4 = Tkinter.LabelFrame(self.StaticPoolPage_Frame,borderwidth = 2, width = 600, height = 100)
 		staticpoolpage_part_4.pack()
 
-		self.StaticPoolCondition_Instance = GUI_Utilities.ConditionGroup_Mgmt(staticpoolpage_part_4,title_list_IN = [u"逻辑",u"表头",u"运算符",u"参数",u"数据类型"])
+		self.StaticPoolCondition_Instance = GUI_Utilities.ConditionGroup_Mgmt(staticpoolpage_part_4,
+			title_list_IN = [u"逻辑",u"表头",u"运算符",u"参数",u"数据类型"])
 		self.StaticPoolCondition_Instance.pack()
 
-		staticpoolpage_part_5 = Tkinter.LabelFrame(self.StaticPoolPage_Frame,borderwidth = 2, width = 360, height = 300)
+		staticpoolpage_part_5 = Tkinter.LabelFrame(self.StaticPoolPage_Frame,borderwidth = 2, width = 600, height = 300)
 		staticpoolpage_part_5.pack()
 		staticpoolpage_part_5.pack_propagate(False)
 
@@ -812,8 +815,37 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.stratspage_right_line_2_canvas.configure(scrollregion=self.stratspage_right_line_2_canvas.bbox("all"))
 		self.stratspage_right_line_2_new_frame.bind("<Configure>",reconfigure_scrollregion2)
 
-		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.stratspage_right_line_2_new_frame,title_list_IN=Config.measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加度量',delete_condition_button_text_IN = u'删除度量',style_IN = 'ComboBox')
+		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.stratspage_right_line_2_new_frame,
+			title_list_IN=Config.measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加度量',
+			delete_condition_button_text_IN = u'删除度量',style_IN = 'ComboBox')
 
+		###################################### For GroupRule ######################################
+
+		# self.stratspage_right_line_3_frame = Tkinter.Frame(self.stratspage_right_frame)
+		# self.stratspage_right_line_3_frame.pack(side = 'top', fill ='both', expand = 'yes')
+		# self.stratspage_right_line_3_canvas = Tkinter.Canvas(self.stratspage_right_line_3_frame, width=800, height=500, bg="white")
+		# self.stratspage_right_line_3_new_frame = Tkinter.Frame(self.stratspage_right_line_3_canvas)
+
+		# ysb = ttk.Scrollbar(self.stratspage_right_line_3_frame,orient='vertical', command= self.stratspage_right_line_3_canvas.yview)
+		# self.stratspage_right_line_3_canvas.configure(yscrollcommand=ysb.set)
+		# ysb.pack(side = 'right',fill = 'y')
+
+		# xsb = ttk.Scrollbar(self.stratspage_right_line_3_frame, orient='horizontal', command= self.stratspage_right_line_3_canvas.xview)
+		# self.stratspage_right_line_3_canvas.configure(xscrollcommand=xsb.set)
+		# xsb.pack(side = 'bottom',fill = 'x')
+
+		# self.stratspage_right_line_3_canvas.pack(side = 'left')
+		# self.stratspage_right_line_3_canvas.create_window((0,1), window=self.stratspage_right_line_3_new_frame, anchor="nw")
+
+		# def reconfigure_scrollregion3(event):
+		# 	self.stratspage_right_line_3_canvas.configure(scrollregion=self.stratspage_right_line_3_canvas.bbox("all"))
+		# self.stratspage_right_line_3_new_frame.bind("<Configure>",reconfigure_scrollregion3)
+
+		# self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.stratspage_right_line_3_new_frame,
+		# 	title_list_IN=Config.measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加分组',
+		# 	delete_condition_button_text_IN = u'删除分组',style_IN = 'ComboBox')
+
+		###################################### For GroupRule ######################################
 
 		def run_rtd(events = None):
 			temp_rtd_txt = Config.temp_rtd_txt
@@ -975,7 +1007,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 				if events != None:
 					IO_Utilities.IO_Util.open_in_html(res)
 
-
 		self.stratspage_strats_run_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"分层统计", command = run_strats,bg = Config.Orcas_blue)
 		self.stratspage_strats_run_button.pack(side = 'left',anchor = 'w')
 		self.stratspage_strats_run_button.bind("<Button-3>", run_strats)
@@ -989,6 +1020,18 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.stratspage_display_group_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"分组规则", command = display_mapping_group,bg = Config.Orcas_blue)
 		self.stratspage_display_group_button.pack(side = 'left',anchor = 'w')
 
+		def modify_group_rule():
+			# modify_group_rule_frame = Tkinter.Frame()
+			# modify_group_rule_frame.pack(side = 'left')
+			GroupRulePage_Frame = Tkinter.Frame(modify_group_rule_frame)
+			GroupRulePage_Frame.pack(expand=1, fill="both")
+			# sql_query = "SELECT * FROM [Orcas_Operation].[dbo].[Strats_GroupRule_Mapping]"
+			# res_list = IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 1,database = Config.orcas_operation_db)
+			# res = res_list[0]
+			# IO_Utilities.IO_Util.open_in_html(res)
+
+		self.stratspage_display_group_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"分组调整", command = modify_group_rule,bg = Config.Orcas_blue)
+		self.stratspage_display_group_button.pack(side = 'left',anchor = 'w')
 
 		def load_strats_settings():
 			strats_idx = self.strats_gui_mgmt.combobox_Strats_Idx.get()
@@ -1031,7 +1074,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.stratspage_load_strats_settings_button.pack(side = 'left',anchor = 'w')
 
 
-		def save_strats_settings():	
+		def save_strats_settings():
 			strats_raw_tape_dir = self.strats_gui_mgmt.text_Strats_RT_Dir.get('0.0','end-1c')
 			strats_display_topn = int(self.strats_gui_mgmt.text_Display_Top_N.get('0.0','end-1c'))
 			strats_sort_by = int(self.strats_gui_mgmt.text_Sort_By.get('0.0','end-1c'))
@@ -1268,6 +1311,10 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		self.displayLeveredEconomicsGraph_Button = Tkinter.Button(financingmgmt_line_6, text = u"融资现金流走势", command = displayLeveredEconomicsGraph,bg = Config.Orcas_blue)
 		self.displayLeveredEconomicsGraph_Button.pack(side = 'left')
+
+	def VintageAnalysisPage_design(self):
+		self.VintageAnalysisPage_Frame = Tkinter.Frame(self.grand_left_frame)
+		self.VintageAnalysisPage_Frame.pack(expand=1, fill="both")
 
 	def LeveredEconomicsPage_design(self):
 		self.LeveredEconomicsPage_Frame = Tkinter.Frame(self.grand_left_frame)
