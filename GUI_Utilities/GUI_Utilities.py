@@ -58,7 +58,10 @@ class Treeview_Mgmt(Tkinter.Frame):
 			# be careful with chinese character
 			# self.tree.heading(col,text=str(col))
 			self.tree.heading(col,text=col)
-			self.tree.column(col, stretch=0, width=70)
+			if col == u'创立时间':
+				self.tree.column(col, stretch=0, width=150)
+			else:
+				self.tree.column(col, stretch=0, width=70)
 
 		#Populate data in the treeview
 		for index,row in df_IN.iterrows(): self.tree.insert('', 'end',text=index, values = tuple(row[0:]))
@@ -146,7 +149,7 @@ class ComboBoxGroup_Mgmt(Tkinter.Frame):
 class ConditionGroup_Mgmt(Tkinter.Frame):
 	def __init__(self, master=None, title_list_IN = ["Column1","Column2","Column3"],
 		add_condition_button_text_IN = u'添加条件',delete_condition_button_text_IN = u'删除条件',
-		BoxGroup_width_IN = 9, style_IN = 'TextBox', Label_width_IN = 9, combo_box_values_list_IN = None):
+		BoxGroup_width_IN = 11, style_IN = 'TextBox', Label_width_IN = 11, combo_box_values_list_IN = None):
 
 		Tkinter.Frame.__init__(self, master)
 		self.pack()
@@ -169,7 +172,8 @@ class ConditionGroup_Mgmt(Tkinter.Frame):
 		self.add_condition_button = Tkinter.Button(self.button_frame, text = add_condition_button_text_IN,command = self.add_condition,width = 12)
 		self.add_condition_button.pack(side = 'left')
 
-		self.delete_condition_button = Tkinter.Button(self.button_frame, text = delete_condition_button_text_IN, command = lambda : self.delete_condition(max(list(self.conditions_dict.keys())),True),width = 12)
+		self.delete_condition_button = Tkinter.Button(self.button_frame, text = delete_condition_button_text_IN,
+			command = lambda : self.delete_condition(max(list(self.conditions_dict.keys())),True),width = 12)
 		self.delete_condition_button.pack(side = 'left')
 
 		self.title_frame = Tkinter.Frame(self.frame)
@@ -192,16 +196,19 @@ class ConditionGroup_Mgmt(Tkinter.Frame):
 		self.conditions_dict[temp_line_name][1].pack(side = 'left',expand = 1, fill="both")
 
 		if self.style == 'TextBox':
-			self.conditions_dict[temp_line_name][2] = TextBoxGroup_Mgmt(self.conditions_dict[temp_line_name][1],num_of_box_IN = self.col_num,width_IN = self.BoxGroup_width)
+			self.conditions_dict[temp_line_name][2] = TextBoxGroup_Mgmt(self.conditions_dict[temp_line_name][1],num_of_box_IN = self.col_num,
+				width_IN = self.BoxGroup_width)
 		elif self.style == 'ComboBox':
-			self.conditions_dict[temp_line_name][2] = ComboBoxGroup_Mgmt(self.conditions_dict[temp_line_name][1],num_of_box_IN = self.col_num,width_IN = self.BoxGroup_width,combo_box_values_list_IN = self.combo_box_values_list)
+			self.conditions_dict[temp_line_name][2] = ComboBoxGroup_Mgmt(self.conditions_dict[temp_line_name][1],num_of_box_IN = self.col_num,
+				width_IN = self.BoxGroup_width, combo_box_values_list_IN = self.combo_box_values_list)
 
 		self.conditions_dict[temp_line_name][2].pack()
 
 		self.conditions_dict[temp_line_name][3] = Tkinter.Frame(self.conditions_dict[temp_line_name][0])
 		self.conditions_dict[temp_line_name][3].pack(side = 'left',expand = 1, fill="both")
 
-		self.conditions_dict[temp_line_name][4] = Tkinter.Button(self.conditions_dict[temp_line_name][3], text = u"x", command = lambda : self.delete_condition(self.conditions_dict[temp_line_name][4]),bg = 'red')
+		self.conditions_dict[temp_line_name][4] = Tkinter.Button(self.conditions_dict[temp_line_name][3], text = u"x",
+			command = lambda : self.delete_condition(self.conditions_dict[temp_line_name][4]),bg = 'red')
 		self.conditions_dict[temp_line_name][4].pack()
 
 		self.condition_num = len(self.conditions_dict)
@@ -222,9 +229,11 @@ class ConditionGroup_Mgmt(Tkinter.Frame):
 		self.conditions_dict[temp_line_name][3].pack(side = 'left',expand = 1, fill="both")
 
 		if self.style == 'TextBox':
-			self.conditions_dict[temp_line_name][2] = TextBoxGroup_Mgmt(self.conditions_dict[temp_line_name][1],num_of_box_IN = self.col_num,width_IN = self.BoxGroup_width)
+			self.conditions_dict[temp_line_name][2] = TextBoxGroup_Mgmt(self.conditions_dict[temp_line_name][1],num_of_box_IN = self.col_num,
+				width_IN = self.BoxGroup_width)
 		elif self.style == 'ComboBox':
-			self.conditions_dict[temp_line_name][2] = ComboBoxGroup_Mgmt(self.conditions_dict[temp_line_name][1],num_of_box_IN = self.col_num,width_IN = self.BoxGroup_width,combo_box_values_list_IN = self.combo_box_values_list)
+			self.conditions_dict[temp_line_name][2] = ComboBoxGroup_Mgmt(self.conditions_dict[temp_line_name][1],num_of_box_IN = self.col_num,
+				width_IN = self.BoxGroup_width,combo_box_values_list_IN = self.combo_box_values_list)
 		
 		self.conditions_dict[temp_line_name][2].pack()
 
