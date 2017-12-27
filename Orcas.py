@@ -6,10 +6,7 @@ import shutil
 reload(sys)
 sys.setdefaultencoding( "gb2312" )
 
-# sys.path.append("F:\Work\Bohai Huijin Asset Management\Investment\Orcas_Killer\Strats_Analytics\\")
-#sys.path.append("E:\BHHJ\Code\Orcas\Strats_Analytics\\")
 Orcas_dir = os.path.dirname(__file__)
-# print os.path.join(Orcas_dir, 'Strats_Analytics\\')
 sys.path.append(os.path.join(Orcas_dir, 'Strats_Analytics\\'))
 
 
@@ -84,19 +81,10 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.dashboard_label = Tkinter.Label(self.grand_left_frame,text='未载入任何资产池分析实例',bg = Config.Orcas_green)
 		self.dashboard_label.pack(side = 'top',anchor = 'center',expand = 'yes',fill = 'x')
 
-		# removed
-		# self.AssetCashFlowPage_design()
-		# self.notebook.add(self.AssetCashFlowPage_Frame, text="Read Asset Cash Flow")
-		# removed
 
 		self.live_structure = None
 		self.live_structure_gui = None
 		
-		# removed
-		# self.LeveredEconomicsPage_design()
-		# self.notebook.add(self.LeveredEconomicsPage_Frame, text="Levered Economics")
-		# removed
-
 		self.StratsPage_design()
 		self.notebook.add(self.StratsPage_Frame, text="统计分层分析")
 
@@ -268,21 +256,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 		static_pool_mgmt_label.pack(side = 'top',pady = 10)
 		self.Mgmt_Static_Pool_treeview = GUI_Utilities.Treeview_Mgmt(master = staticpoolpage_part_5, df_IN = self.Mgmt_Static_Pool_df)
 
-	def AssetCashFlowPage_design(self):
-		self.AssetCashFlowPage_Frame = Tkinter.Frame(self.grand_left_frame)
-		self.AssetCashFlowPage_Frame.pack(expand=1, fill="both")
-		
-		def readCashFlow():
-			cashflow_dir = self.AssetCashFlow_DirTextBox.get()
-			self.cashflow_df = IO_Utilities.IO_Util.read_csv(cashflow_dir)
-			# IO_Utilities.IO_Util.open_in_html(self.cashflow_df)
-			
-		self.AssetCashFlow_Button = Tkinter.Button(self.AssetCashFlowPage_Frame, text = "Read Cash Flow", command = readCashFlow)
-		self.AssetCashFlow_Button.pack()
-
-		self.AssetCashFlow_DirTextBox = Tkinter.Entry(self.AssetCashFlowPage_Frame, width=50)
-		self.AssetCashFlow_DirTextBox.insert(0,"F:\Work\Bohai Huijin Asset Management\Investment\Orcas\Data\AssetCashflow\\test.csv")
-		self.AssetCashFlow_DirTextBox.pack()
 
 	def runUnleveredEconomics(self):
 
@@ -1316,62 +1289,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.VintageAnalysisPage_Frame = Tkinter.Frame(self.grand_left_frame)
 		self.VintageAnalysisPage_Frame.pack(expand=1, fill="both")
 
-	def LeveredEconomicsPage_design(self):
-		self.LeveredEconomicsPage_Frame = Tkinter.Frame(self.grand_left_frame)
-		self.LeveredEconomicsPage_Frame.pack(expand=1, fill="both")
-		# self.LeveredEconomics_StructureNotebook = ttk.Notebook(self.LeveredEconomicsPage_Frame)
-		# self.LeveredEconomics_StructureNotebook.pack()
 
-		self.LeveredEconomicsPage_Display_Frame = Tkinter.Frame(self.LeveredEconomicsPage_Frame)
-		self.LeveredEconomicsPage_Display_Frame.pack(expand=1, fill="both")
-
-		self.LeveredEconomicsPage_Treeview_Frame = Tkinter.Frame(self.LeveredEconomicsPage_Frame)
-		self.LeveredEconomicsPage_Treeview_Frame.pack(expand=1, fill="both")
-
-		self.live_structure_gui = Struct_GUI_Model.Securitization_GUI_Mgmt(self.LeveredEconomicsPage_Display_Frame)
-
-		def runStructure(events= None):
-			self.live_structure_gui.get()
-			self.struct_specifics = self.live_structure_gui.struct_specifics
-			# print self.struct_specifics
-			self.live_structure = Struct_CF_Model.Securitization(self.cashflow_df, self.struct_specifics)
-			self.live_structure.build_cashflow()
-			self.live_structure.build_analytics()
-			if events != None:
-				IO_Utilities.IO_Util.open_in_html(Other_Utilities.DF_Util.df_from_dictlist(self.live_structure.analytics_holde))
-				IO_Utilities.IO_Util.open_in_html(self.live_structure.poolCashflow)
-		
-		def saveStructure():
-			# with open('F:\Work\Bohai Huijin Asset Management\Investment\Orcas\Struct_Specifics\\' + '1.Struct_Info' + '.pkl', 'wb') as f:
-			# 	pickle.dump(self.struct_specifics, f, pickle.HIGHEST_PROTOCOL)
-			with open(struct_info_pkl, 'wb') as f:
-				pickle.dump(self.struct_specifics, f, pickle.HIGHEST_PROTOCOL)
-
-		def loadStructure():
-			# file = 'F:\Work\Bohai Huijin Asset Management\Investment\Orcas\Struct_Specifics\\' + '1.Struct_Info' + '.pkl'
-			file = struct_info_pkl
-			struct_pkl = pickle.load( open( file, "rb" ) )
-			self.struct_specifics = {}
-			self.struct_specifics.update({'input_specifics' : struct_pkl['input_specifics']})
-			self.struct_specifics.update({'name_specifics' : struct_pkl['name_specifics']})
-			self.live_structure_gui.load_struct(self.struct_specifics)
-
-		def deleteallTranche():
-			self.live_structure_gui.delete_all_tranche()
-
-		self.runStructure_Button = Tkinter.Button(self.LeveredEconomicsPage_Display_Frame, text = "run Structre", command = runStructure)
-		self.runStructure_Button.pack(side = 'left')
-
-		self.runStructure_Button.bind("<Button-3>", runStructure)
-
-		self.saveStructure_Button = Tkinter.Button(self.LeveredEconomicsPage_Display_Frame, text = "save Structre", command = saveStructure)
-		self.saveStructure_Button.pack(side = 'left')
-
-		self.loadStructure_Button = Tkinter.Button(self.LeveredEconomicsPage_Display_Frame, text = "load Structre", command = loadStructure)
-		self.loadStructure_Button.pack(side = 'left')
-
-		self.deletealltranche_Button = Tkinter.Button(self.LeveredEconomicsPage_Display_Frame, text = "delete all Tranches", command = deleteallTranche)
-		self.deletealltranche_Button.pack(side = 'left')
 
 
 def main():
