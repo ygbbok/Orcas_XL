@@ -1289,9 +1289,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.VintageAnalysisPage_Frame = Tkinter.Frame(self.grand_left_frame)
 		self.VintageAnalysisPage_Frame.pack(expand=1, fill="both")
 
-
-
-
 def main():
 	root = Tkinter.Tk()
 	Orcas_app = Orcas_Wrapper(master=root)
