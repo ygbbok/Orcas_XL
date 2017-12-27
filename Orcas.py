@@ -1179,6 +1179,13 @@ class Orcas_Wrapper(Tkinter.Frame):
 		financingmgmt_line_6 = Tkinter.Frame(self.FinancingMgmtPage_Frame,width = 1000)
 		financingmgmt_line_6.pack(side = 'top',fill = 'x',expand = 'yes')
 
+		financingmgmt_line_7 = Tkinter.Frame(self.FinancingMgmtPage_Frame)
+		financingmgmt_line_7.pack(side = 'top',fill = 'x')
+
+		financingmgmt_line_8 = Tkinter.Frame(self.FinancingMgmtPage_Frame)
+		financingmgmt_line_8.pack(side = 'top',fill = 'x',expand = 'yes')
+
+
 		def runLeveredEconomics():
 			# run first financing
 			self.first_financing_gui_mgmt.live_struct_mgmt.get_specs()
@@ -1271,18 +1278,154 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		self.Mgmt_Levered_Economics_Run_treeview = GUI_Utilities.Treeview_Mgmt(master = financingmgmt_line_6, df_IN = self.Mgmt_Levered_Economics_df)
 
+		newFinancingStructure_label = Tkinter.Label(financingmgmt_line_7,text = u"融资结构名称")
+		newFinancingStructure_label.pack(side = 'left',fill = 'x',expand='yes')
 
-		self.runLeveredEconomics_Button = Tkinter.Button(financingmgmt_line_6, text = u"新创现金流分析(含融资)", command = runLeveredEconomics,bg = Config.Orcas_blue)
+		self.newFinancingStructure_entry = Tkinter.Entry(financingmgmt_line_7,width = 2,bg = Config.Orcas_blue)
+		self.newFinancingStructure_entry.pack(side = 'left',fill = 'x',expand='yes')
+
+		def saveFinancingStructure():
+			self.first_financing_gui_mgmt.live_struct_mgmt.get_specs(if_raw_IN = True)
+			self.second_financing_gui_mgmt.live_struct_mgmt.get_specs(if_raw_IN = True)
+
+			first_financing_name = self.first_financing_gui_mgmt.live_struct_name
+			first_financing_specs = self.first_financing_gui_mgmt.live_struct_mgmt.specs
+			second_financing_name = self.second_financing_gui_mgmt.live_struct_name
+			second_financing_specs = self.second_financing_gui_mgmt.live_struct_mgmt.specs
+
+			other_specs = dict()
+			other_specs['transition_period'] = self.phase1_phase2_trans_TextBox.get()
+			other_specs['ramping_vector'] =  self.ramping_TextBox.get()
+			other_specs['px_center'] =  self.financing_asset_px_center_TextBox.get()
+			other_specs['px_steps'] =  self.financing_asset_px_steps_TextBox.get()
+			other_specs['px_step_size'] =  self.financing_asset_px_step_size_TextBox.get()
+
+			first_financing = {}
+			first_financing['name'] = first_financing_name
+			first_financing['specs'] = first_financing_specs
+
+			second_financing = {}
+			second_financing['name'] = second_financing_name
+			second_financing['specs'] = second_financing_specs
+
+			new_financing_struct_num = max(self.Mgmt_Levered_Economics_df[u'融资结构编号']) + 1
+			new_financing_struct_name = self.newFinancingStructure_entry.get()
+
+			output = open(Config.Levered_Economics_Run_Folder + str(new_financing_struct_num) + '.first_financing.pkl', 'wb')
+			pickle.dump(first_financing, output)
+			output.close()
+
+			output = open(Config.Levered_Economics_Run_Folder + str(new_financing_struct_num) + '.second_financing.pkl', 'wb')
+			pickle.dump(second_financing, output)
+			output.close()
+
+			output = open(Config.Levered_Economics_Run_Folder + str(new_financing_struct_num) + '.other_specs.pkl', 'wb')
+			pickle.dump(other_specs, output)
+			output.close()
+
+			self.Mgmt_Levered_Economics_df.loc[max(self.Mgmt_Levered_Economics_df.index)+1] = [new_financing_struct_num,new_financing_struct_name,orcas_user,datetime.now()]
+			self.Mgmt_Levered_Economics_df.to_pickle(Config.Mgmt_Levered_Economics_Run_File)
+			self.Mgmt_Levered_Economics_Run_treeview.update_dataframe(self.Mgmt_Levered_Economics_df)
+
+
+		def loadFinancingStructure():
+			selected = self.Mgmt_Levered_Economics_Run_treeview.tree.selection()[0]
+			selected_values = self.Mgmt_Levered_Economics_Run_treeview.tree.item(selected,'values')
+			financing_struct_num = selected_values[0]
+
+			to_be_loaded_first_financing = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.first_financing.pkl'
+			to_be_loaded_second_financing = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.second_financing.pkl'
+			to_be_loaded_other_specs  = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.other_specs.pkl'
+
+			first_financing_pkl_file = open(to_be_loaded_first_financing, 'rb')
+			first_financing_pkl = pickle.load(first_financing_pkl_file)
+			first_financing_pkl_file.close()
+
+			second_financing_pkl_file = open(to_be_loaded_second_financing, 'rb')
+			second_financing_pkl = pickle.load(second_financing_pkl_file)
+			second_financing_pkl_file.close()
+
+			other_specs_pkl_file = open(to_be_loaded_other_specs, 'rb')
+			other_specs_pkl = pickle.load(other_specs_pkl_file)
+			other_specs_pkl_file.close()
+
+			self.phase1_phase2_trans_TextBox.delete(0,'end')
+			self.phase1_phase2_trans_TextBox.insert('end',other_specs_pkl['transition_period'])
+
+			self.ramping_TextBox.delete(0,'end')
+			self.ramping_TextBox.insert('end',other_specs_pkl['ramping_vector'])
+
+			self.financing_asset_px_center_TextBox.delete(0,'end')
+			self.financing_asset_px_center_TextBox.insert('end',other_specs_pkl['px_center'])
+
+			self.financing_asset_px_steps_TextBox.delete(0,'end')
+			self.financing_asset_px_steps_TextBox.insert('end',other_specs_pkl['px_steps'])
+
+			self.financing_asset_px_step_size_TextBox.delete(0,'end')
+			self.financing_asset_px_step_size_TextBox.insert('end',other_specs_pkl['px_step_size'])
+
+			self.first_financing_gui_mgmt.live_struct_name = first_financing_pkl['name']
+			self.second_financing_gui_mgmt.live_struct_name = second_financing_pkl['name']
+
+			self.first_financing_gui_mgmt.struct_option_strVar.set(self.first_financing_gui_mgmt.live_struct_name)
+			self.second_financing_gui_mgmt.struct_option_strVar.set(self.second_financing_gui_mgmt.live_struct_name)
+
+			self.first_financing_gui_mgmt.struct_setup()
+			self.second_financing_gui_mgmt.struct_setup()
+
+			self.first_financing_gui_mgmt.load_struct(first_financing_pkl['specs'])
+			self.second_financing_gui_mgmt.load_struct(second_financing_pkl['specs'])
+
+
+		def deleteFinancingStructure():
+			for selected in self.Mgmt_Levered_Economics_Run_treeview.tree.selection():
+				selected_values = self.Mgmt_Levered_Economics_Run_treeview.tree.item(selected,'values')
+				financing_struct_num = selected_values[0]
+				to_be_removed_first_financing = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.first_financing.pkl'
+				to_be_removed_second_financing = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.second_financing.pkl'
+				to_be_removed_other_specs  = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.other_specs.pkl'
+
+				try:
+					os.remove(to_be_removed_first_financing)
+				except:
+					pass
+
+				try:
+					os.remove(to_be_removed_second_financing)
+				except:
+					pass	
+
+				try:
+					os.remove(to_be_removed_other_specs)
+				except:
+					pass
+
+				self.Mgmt_Levered_Economics_df = self.Mgmt_Levered_Economics_df[self.Mgmt_Levered_Economics_df[u'融资结构编号']!=int(financing_struct_num)]
+
+			self.Mgmt_Levered_Economics_df.to_pickle(Config.Mgmt_Levered_Economics_Run_File)
+			self.Mgmt_Levered_Economics_Run_treeview.update_dataframe(self.Mgmt_Levered_Economics_df)
+
+
+		self.saveFinancingStructure_Button = Tkinter.Button(financingmgmt_line_8, text = u"保存融资结构", command = saveFinancingStructure,bg = Config.Orcas_blue)
+		self.saveFinancingStructure_Button.pack(side = 'left')
+
+		self.loadFinancingStructure_Button = Tkinter.Button(financingmgmt_line_8, text = u"载入融资结构", command = loadFinancingStructure,bg = Config.Orcas_blue)
+		self.loadFinancingStructure_Button.pack(side = 'left')
+
+		self.deleteFinancingStructure_Button = Tkinter.Button(financingmgmt_line_8, text = u"删除融资结构", command = deleteFinancingStructure,bg = Config.Orcas_blue)
+		self.deleteFinancingStructure_Button.pack(side = 'left')
+
+		self.runLeveredEconomics_Button = Tkinter.Button(financingmgmt_line_8, text = u"新创现金流分析(含融资)", command = runLeveredEconomics,bg = Config.Orcas_blue)
 		self.runLeveredEconomics_Button.pack(side = 'left')
 
-		self.displayLeveredCF_Button = Tkinter.Button(financingmgmt_line_6, text = u"融资现金流", command = displayLeveredCF,bg = Config.Orcas_blue)
+		self.displayLeveredCF_Button = Tkinter.Button(financingmgmt_line_8, text = u"融资现金流", command = displayLeveredCF,bg = Config.Orcas_blue)
 		self.displayLeveredCF_Button.pack(side = 'left')
 
-		self.displayLeveredEconomics_Button = Tkinter.Button(financingmgmt_line_6, text = u"融资现金流指标", command = displayLeveredEconomics,bg = Config.Orcas_blue)
+		self.displayLeveredEconomics_Button = Tkinter.Button(financingmgmt_line_8, text = u"融资现金流指标", command = displayLeveredEconomics,bg = Config.Orcas_blue)
 		self.displayLeveredEconomics_Button.pack(side = 'left')
 		self.displayLeveredEconomics_Button.bind("<Button-3>", displayLeveredEconomics)
 
-		self.displayLeveredEconomicsGraph_Button = Tkinter.Button(financingmgmt_line_6, text = u"融资现金流走势", command = displayLeveredEconomicsGraph,bg = Config.Orcas_blue)
+		self.displayLeveredEconomicsGraph_Button = Tkinter.Button(financingmgmt_line_8, text = u"融资现金流走势", command = displayLeveredEconomicsGraph,bg = Config.Orcas_blue)
 		self.displayLeveredEconomicsGraph_Button.pack(side = 'left')
 
 	def VintageAnalysisPage_design(self):
