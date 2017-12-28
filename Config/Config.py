@@ -89,7 +89,7 @@ measures_settings_columns_txt = [u'column',u'calc_method',u'calc_helper','col_na
 
 mappingrule_settings_columns_gui = [u'分组编号',u'下限',u'上限',u'分组标签']
 mappingrule_settings_columns_db = [u'Rule_Idx',u'Lower_Bound',u'Upper_Bound','Label']
-mappingrule_settings_columns_txt = [u'Rule_Name',u'Lower_Bound',u'Upper_Bound','Label']
+mappingrule_settings_columns_txt = [u'Rule_Idx',u'Lower_Bound',u'Upper_Bound','Label']
 
 strats_idx_name_temp_txt = os.path.join(Orcas_dir, 'Orcas_Operation_temp_txt\Strats_Idx_temp.txt')
 strats_dimension_settings_temp_txt = os.path.join(Orcas_dir, 'Orcas_Operation_temp_txt\Strats_Dimension_Settings_temp.txt')

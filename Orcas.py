@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-############# comment
+import pyodbc
 
 import sys
 import os
@@ -84,10 +84,10 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.dashboard_label = Tkinter.Label(self.grand_left_frame,text='未载入任何资产池分析实例',bg = Config.Orcas_green)
 		self.dashboard_label.pack(side = 'top',anchor = 'center',expand = 'yes',fill = 'x')
 
-
 		self.live_structure = None
 		self.live_structure_gui = None
 		
+
 		self.StratsPage_design()
 		self.notebook.add(self.StratsPage_Frame, text="统计分层分析")
 
@@ -297,7 +297,8 @@ class Orcas_Wrapper(Tkinter.Frame):
 			smm_multi = float(self.live_credit_model_specs["SMM Multi"])
 			mdr_multi = float(self.live_credit_model_specs["MDR Multi"])
 
-			credit_model_instance = chinatopcredit_cashloan_5m10m.chinatopcredit_cashloan_5m10m(self.live_static_pool_df,smm_multi_IN = smm_multi, mdr_multi_IN = mdr_multi)
+			credit_model_instance = chinatopcredit_cashloan_5m10m.chinatopcredit_cashloan_5m10m(self.live_static_pool_df,smm_multi_IN = smm_multi,
+				mdr_multi_IN = mdr_multi)
 
 		credit_model_instance.run_prepay_default()
 		# Credit Model Finished
@@ -407,9 +408,11 @@ class Orcas_Wrapper(Tkinter.Frame):
 			for idx,unlevered_economics_run_number in enumerate(self.live_unlevered_economics_run_number_placeholder):
 				live_agg_unlevered_economics_run_aggregation_cf = self.live_agg_unlevered_economics_run_aggregation_cfs[idx]
 
-				unlevered_economics_run_yield = Calc_Utilities.StandardBond_Util.irr_calc(np.array(live_agg_unlevered_economics_run_aggregation_cf['fundings']), np.array(live_agg_unlevered_economics_run_aggregation_cf['total_cf']), frequency_IN = 12, px = self.static_pool_px)
+				unlevered_economics_run_yield = Calc_Utilities.StandardBond_Util.irr_calc(np.array(live_agg_unlevered_economics_run_aggregation_cf['fundings']), 
+					p.array(live_agg_unlevered_economics_run_aggregation_cf['total_cf']), frequency_IN = 12, px = self.static_pool_px)
 
-				live_unlevered_economics_run_analytics_builder = Calc_Utilities.AggAsset_Analytics(bondDF_IN = live_agg_unlevered_economics_run_aggregation_cf, annualyield_IN = unlevered_economics_run_yield, frequency_IN = 12,px_IN = self.static_pool_px)
+				live_unlevered_economics_run_analytics_builder = Calc_Utilities.AggAsset_Analytics(bondDF_IN = live_agg_unlevered_economics_run_aggregation_cf,
+					annualyield_IN = unlevered_economics_run_yield, frequency_IN = 12,px_IN = self.static_pool_px)
 
 				live_unlevered_economics_run_analytics_table_res = live_unlevered_economics_run_analytics_builder.build_analytics_table()
 				live_unlevered_economics_run_analytics_chart_res = live_unlevered_economics_run_analytics_builder.build_analytics_charts()
@@ -437,10 +440,12 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.grand_right_lower_frame.pack(side = 'top')
 
 			# Display the curves charts
-			GUI_Utilities.Display_Charts_Mgmt_OrcasFormat(master = self.grand_right_upper_frame,datadict_IN = run_charts_display_dict, keys_IN = ['smm_curve','mdr_curve','severity_curve','cum_loss_curve'])
+			GUI_Utilities.Display_Charts_Mgmt_OrcasFormat(master = self.grand_right_upper_frame,datadict_IN = run_charts_display_dict,
+				keys_IN = ['smm_curve','mdr_curve','severity_curve','cum_loss_curve'])
 
 			# Display the stats table
-			GUI_Utilities.DisplayTable_Mgmt(master = self.grand_right_lower_frame,df_IN = run_stats_display_df,formatting_mapper_IN = self.live_unlevered_economics_run_analytics_builders[0].formatting_mappings)
+			GUI_Utilities.DisplayTable_Mgmt(master = self.grand_right_lower_frame,df_IN = run_stats_display_df,
+				formatting_mapper_IN = self.live_unlevered_economics_run_analytics_builders[0].formatting_mappings)
 
 
 		def credit_model_gui_pop(events = None):
@@ -707,7 +712,9 @@ class Orcas_Wrapper(Tkinter.Frame):
 				self.grand_right_upper_frame = Tkinter.Frame(self.grand_right_frame,width=100, height=200)
 				self.grand_right_upper_frame.pack(side = 'top')
 
-				GUI_Utilities.Display_Unlevered_Econ_Cashflow_Mgmt(master = self.grand_right_upper_frame, run_num_list_IN = self.live_unlevered_economics_run_number_placeholder, cashflow_df_list_IN = self.live_agg_unlevered_economics_run_aggregation_cfs)
+				GUI_Utilities.Display_Unlevered_Econ_Cashflow_Mgmt(master = self.grand_right_upper_frame,
+					run_num_list_IN = self.live_unlevered_economics_run_number_placeholder,
+					cashflow_df_list_IN = self.live_agg_unlevered_economics_run_aggregation_cfs)
 
 
 		self.showUnleveredEconomics_Button = Tkinter.Button(unleveredeconomics_line_6, text = "资产池分析结果", command = showUnleveredEconomicsStats)
@@ -791,7 +798,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.stratspage_right_line_2_new_frame,
 			title_list_IN=Config.measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加度量',
-			delete_condition_button_text_IN = u'删除度量',style_IN = 'ComboBox')
+			delete_condition_button_text_IN = u'删除度量', style_IN = 'ComboBox')
 
 
 		def run_rtd(events = None):
@@ -805,7 +812,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 			if events!=None:
 				IO_Utilities.IO_Util.open_in_html(rtd_res)
 
-		self.stratspage_rtd_run_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"统计描述", command = lambda : run_rtd, bg = Config.Orcas_blue)
+		self.stratspage_rtd_run_button = Tkinter.Button(self.StratsPage_Lower_Frame, text = u"统计描述", command = lambda : run_rtd, bg = Config.Orcas_blue)
 		self.stratspage_rtd_run_button.pack(side = 'left',anchor = 'w')
 		self.stratspage_rtd_run_button.bind("<Button-3>", run_rtd)
 
@@ -969,32 +976,52 @@ class Orcas_Wrapper(Tkinter.Frame):
 			bg = Config.Orcas_blue)
 		self.stratspage_display_group_button.pack(side = 'left',anchor = 'w')
 
+		def save_group_rule():
+			self.mappingrule_settings.get_all(dict_type =True)
+			mapping_rule_df = pd.DataFrame(self.mappingrule_settings.res)
+
+			mapping_rule_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in
+				zip(Config.mappingrule_settings_columns_gui,Config.mappingrule_settings_columns_txt)])
+			mapping_rule_df = mapping_rule_df.rename(columns = mapping_rule_columns)
+			mapping_rule_df = mapping_rule_df[Config.mappingrule_settings_columns_txt]
+
+			sql_query = "INSERT INTO [Strats_GroupRule_Mapping] ([Rule_Idx], [Lower_Bound], [Upper_Bound], [Label]) "
+
+			insert_value = ""
+			(row_num, col_num) = mapping_rule_df.shape
+
+			for i in range(0, row_num):
+				if (len(mapping_rule_df.iloc[i][0]) + len(mapping_rule_df.iloc[i][1]) + len(mapping_rule_df.iloc[i][2])
+					+ len(mapping_rule_df.iloc[i][3])) != 0:
+					insert_value = insert_value + "(" + mapping_rule_df.iloc[i][0] + ", " + mapping_rule_df.iloc[i][1] + ", " + mapping_rule_df.iloc[i][2] + ", '" + mapping_rule_df.iloc[i][3] + "')"
+				if i != row_num - 1:
+					insert_value = insert_value + ","	
+
+			sql_query = sql_query + "VALUES " + insert_value
+			IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 0, database = Config.orcas_operation_db)
+
+
 		def modify_group_rule():
 			self.group_rule_main = Tkinter.Tk()
 			self.group_rule_main.title("分组调整")
-			self.modify_group_rule_frame = Tkinter.Frame(self.group_rule_main)
-			self.modify_group_rule_frame.pack(side = 'top')
 
-			self.modify_group_rule_canvas = Tkinter.Canvas(self.modify_group_rule_frame, width=500, height=500#, bg="white"
+			self.group_rule_main_frame = Tkinter.Frame(self.group_rule_main)
+			self.group_rule_main_frame.pack()
+
+			self.modify_group_rule_upper_frame = Tkinter.Frame(self.group_rule_main_frame)
+			self.modify_group_rule_lower_frame = Tkinter.Frame(self.group_rule_main_frame)
+			self.modify_group_rule_upper_frame.pack(side = 'top')
+			self.modify_group_rule_lower_frame.pack(side = 'top')
+
+			self.modify_group_rule_canvas = Tkinter.Canvas(self.modify_group_rule_upper_frame, width=350, height=500#, bg="white"
 				)
 			self.modify_group_rule_new_frame = Tkinter.Frame(self.modify_group_rule_canvas)
 
-			# self.GroupRulePage_Frame = Tkinter.Frame(self.modify_group_rule_frame)
-			# self.GroupRulePage_Frame.pack(expand=1, fill="both")
-
-
-			###################################### For GroupRule ######################################
-
-			# self.stratspage_right_line_3_frame = Tkinter.Frame(self.stratspage_right_frame)
-			# self.stratspage_right_line_3_frame.pack(side = 'top', fill ='both', expand = 'yes')
-			# self.stratspage_right_line_3_canvas = Tkinter.Canvas(self.stratspage_right_line_3_frame, width=800, height=500, bg="white")
-			# self.stratspage_right_line_3_new_frame = Tkinter.Frame(self.stratspage_right_line_3_canvas)
-
-			ysb = ttk.Scrollbar(self.modify_group_rule_frame,orient='vertical', command= self.modify_group_rule_canvas.yview)
+			ysb = ttk.Scrollbar(self.modify_group_rule_upper_frame,orient='vertical', command= self.modify_group_rule_canvas.yview)
 			self.modify_group_rule_canvas.configure(yscrollcommand=ysb.set)
 			ysb.pack(side = 'right',fill = 'y')
 
-			xsb = ttk.Scrollbar(self.modify_group_rule_frame, orient='horizontal', command= self.modify_group_rule_canvas.xview)
+			xsb = ttk.Scrollbar(self.modify_group_rule_upper_frame, orient='horizontal', command= self.modify_group_rule_canvas.xview)
 			self.modify_group_rule_canvas.configure(xscrollcommand=xsb.set)
 			xsb.pack(side = 'bottom',fill = 'x')
 
@@ -1005,18 +1032,15 @@ class Orcas_Wrapper(Tkinter.Frame):
 				self.modify_group_rule_canvas.configure(scrollregion=self.modify_group_rule_canvas.bbox("all"))
 			self.modify_group_rule_new_frame.bind("<Configure>",reconfigure_scrollregion3)
 
-			self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.modify_group_rule_new_frame,
+			self.mappingrule_settings = GUI_Utilities.ConditionGroup_Mgmt(self.modify_group_rule_new_frame,
 				title_list_IN = Config.mappingrule_settings_columns_gui, BoxGroup_width_IN = 6, Label_width_IN = 8, add_condition_button_text_IN = u'添加分组',
 				delete_condition_button_text_IN = u'删除分组', style_IN = 'ComboBox')
 
-			self.group_rule_lower_frame = Tkinter.Frame(self.group_rule_main)
-			self.group_rule_lower_frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
-			self.group_rule_quit_button = Tkinter.Button(self.group_rule_lower_frame, text = "关闭", command = self.group_rule_main.destroy)
-        	# self.group_rule_quit_button.pack(side = 'bottom')
-
+			self.group_rule_quit_button = Tkinter.Button(self.modify_group_rule_lower_frame, text = "保存", command = save_group_rule)
+			self.group_rule_quit_button.pack()
 
 		self.modify_group_rule_button = Tkinter.Button(self.StratsPage_Lower_Frame, text = u"分组调整", command = modify_group_rule, bg = Config.Orcas_blue)
-		self.modify_group_rule_button.pack(side = 'left',anchor = 'w')
+		self.modify_group_rule_button.pack(side = 'left', anchor = 'w')
 
 		def load_strats_settings():
 			strats_idx = self.strats_gui_mgmt.combobox_Strats_Idx.get()
@@ -1054,7 +1078,8 @@ class Orcas_Wrapper(Tkinter.Frame):
 			strats_measures_settings_load = strats_measures_res[['Meas_Ori_Label','Calc_Method','Calc_Helper','Meas_Std_Label','format']]
 			self.strats_measures_settings.load_settings(strats_measures_settings_load)
 
-		self.stratspage_load_strats_settings_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"载入分层设置", command = load_strats_settings,bg = Config.Orcas_blue)
+		self.stratspage_load_strats_settings_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"载入分层设置", command = load_strats_settings,
+			bg = Config.Orcas_blue)
 		self.stratspage_load_strats_settings_button.pack(side = 'left',anchor = 'w')
 
 
@@ -1080,7 +1105,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 			strats_measures_df = strats_measures_df[Config.measures_settings_columns_txt]
 
 			sql_query = "SELECT * FROM [Orcas_Operation].[dbo].[Strats_Idx_Name]"
-			res_list = IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 1,database = Config.orcas_operation_db)
+			res_list = IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 1, database = Config.orcas_operation_db)
 			strats_idx_name_df = res_list[0]
 			new_strats_idx = max(strats_idx_name_df['Strats_Idx']) + 1
 
