@@ -44,7 +44,6 @@ class SQL_Util(object):
 			con = pyodbc.connect(driver='{SQL Server Native Client 11.0}', host = Config.sql_server, database=database,trusted_connection='yes',autocommit=True)
 			cursor = con.cursor()
 			sql_script = sql_script + sql_script_IN
-
 			cursor.execute(sql_script)
 			# cursor.commit()
 

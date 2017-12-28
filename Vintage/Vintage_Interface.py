@@ -20,7 +20,6 @@ from tkinter import Tk, StringVar, ttk
 from Tkinter import *
 from Tkinter import END
 
-
 from IO_Utilities import IO_Utilities
 from RTD_Analytics import RTD_Analytics
 
@@ -44,6 +43,10 @@ class Vintage_settings(Tkinter.Frame):
 		self.label_Strats_RT_Dir.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
 		self.text_Strats_RT_Dir = Tkinter.Text(self.line_2_frame, height = 2, width = 45)
 		self.text_Strats_RT_Dir.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
+
+		# to be removed later
+		# self.text_Strats_RT_Dir.set("F:\Work\Bohai Huijin Asset Management\Investment\ABS Investment\Opportunities\5.RawTape\chinatopcredit.all.loantape.csv")
+		# to be removed later
 
 
 		self.line_3_frame = Tkinter.Frame(self.frame)
