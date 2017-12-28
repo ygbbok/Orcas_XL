@@ -25,7 +25,7 @@ class Financing_GUI_Mgmt(Tkinter.Frame):
 
 		self.specifics_initialize(struct_specifics_IN = struct_specifics_IN)
 
-		self.load_struct()
+		# self.load_struct()
 	
 	def specifics_initialize(self,struct_specifics_IN):
 		self.line_1_frame = Tkinter.Frame(self.master_frame)
@@ -62,8 +62,8 @@ class Financing_GUI_Mgmt(Tkinter.Frame):
 		elif self.live_struct_name == u'整体买断': self.live_struct_mgmt = Whole_Loan_Purchase_GUI_Mgmt(self.line_3_frame)
 		elif self.live_struct_name == u'证券化': self.live_struct_mgmt = Securitization_GUI_Mgmt(self.line_3_frame)
 
-	def load_struct(self):
-		pass
+	def load_struct(self,struct_specs_IN):
+		self.live_struct_mgmt.load_struct(struct_specs_IN)
 
 
 class Whole_Loan_Purchase_GUI_Mgmt(Tkinter.Frame):
@@ -77,10 +77,16 @@ class Whole_Loan_Purchase_GUI_Mgmt(Tkinter.Frame):
 
 		self.load_struct()
 
-	def get_specs(self):
+	def get_specs(self,if_raw_IN = False):
 		self.specs['upfrontfee'] = float(self.upfront_fee_entry.get())/100.0
 		self.specs['mgmt_fee'] = float(self.mgmt_fee_entry.get())/100.0
 		self.specs['mgmt_fee_freq'] = int(self.mgmt_fee_freq_entry.get())
+
+		if if_raw_IN:
+			self.specs['upfrontfee'] = self.upfront_fee_entry.get()
+			self.specs['mgmt_fee'] = self.mgmt_fee_entry.get()
+			self.specs['mgmt_fee_freq'] = self.mgmt_fee_freq_entry.get()
+
 
 	def specifics_initialize(self,struct_specifics_IN):
 
@@ -121,7 +127,7 @@ class Whole_Loan_Purchase_GUI_Mgmt(Tkinter.Frame):
 
 		self.notebook.add(self.page_1_general,text=u"一般条款")
 
-	def load_struct(self):
+	def load_struct(self,struct_specs_IN):
 		pass
 
 class Tiered_Trust_GUI_Mgmt(Tkinter.Frame):
@@ -134,9 +140,8 @@ class Tiered_Trust_GUI_Mgmt(Tkinter.Frame):
 
 		self.specifics_initialize(struct_specifics_IN = struct_specifics_IN)
 
-		self.load_struct()
 
-	def get_specs(self):
+	def get_specs(self,if_raw_IN = False):
 		self.specs['term'] = int(self.term_entry.get())
 		self.specs['snr_intrate'] = float(self.snr_intrate_entry.get())/100.0
 		self.specs['snr_freq'] = int(self.snr_freq_entry.get())
@@ -147,8 +152,16 @@ class Tiered_Trust_GUI_Mgmt(Tkinter.Frame):
 		self.specs['extra_reserve_account_buffer'] = float(self.extra_reserve_account_entry.get())*10000.0
 		self.specs['pass_through_trigger_period'] = int(self.passthrough_trigger_entry.get())
 		
-		# f = open("F:\Work\Bohai Huijin Asset Management\Investment\Orcas\Debug\warehouse_structspecifics.pkl",'wb')
-		# pickle.dump(self.specs,f)
+		if if_raw_IN:
+			self.specs['term'] = self.term_entry.get()
+			self.specs['snr_intrate'] = self.snr_intrate_entry.get()
+			self.specs['snr_freq'] = self.snr_freq_entry.get()
+			self.specs['snr_advrate'] = self.snr_advrate_entry.get()
+			self.specs['trust_fee'] = self.trust_chanel_fee_entry.get()
+			self.specs['trust_upfrontfee'] = self.trust_chanel_upfrontfee_entry.get()
+			self.specs['reinvestment_vector'] = self.reinvestment_entry.get()
+			self.specs['extra_reserve_account_buffer'] = self.extra_reserve_account_entry.get()
+			self.specs['pass_through_trigger_period'] = self.passthrough_trigger_entry.get()
 
 	def specifics_initialize(self,struct_specifics_IN):
 
@@ -272,9 +285,26 @@ class Tiered_Trust_GUI_Mgmt(Tkinter.Frame):
 
 		self.notebook.add(self.page_4_resreve,text=u"储备金")
 
-	def load_struct(self):
-		pass
+	def load_struct(self, struct_specs_IN):
+		self.term_entry.delete(0,'end')
+		self.snr_intrate_entry.delete(0,'end')
+		self.snr_freq_entry.delete(0,'end')
+		self.snr_advrate_entry.delete(0,'end')
+		self.trust_chanel_fee_entry.delete(0,'end')
+		self.trust_chanel_upfrontfee_entry.delete(0,'end')
+		self.reinvestment_entry.delete(0,'end')
+		self.extra_reserve_account_entry.delete(0,'end')
+		self.passthrough_trigger_entry.delete(0,'end')
 
+		self.term_entry.insert(0,struct_specs_IN['term'])
+		self.snr_intrate_entry.insert(0,struct_specs_IN['snr_intrate'])
+		self.snr_freq_entry.insert(0,struct_specs_IN['snr_freq'])
+		self.snr_advrate_entry.insert(0,struct_specs_IN['snr_advrate'])
+		self.trust_chanel_fee_entry.insert(0,struct_specs_IN['trust_fee'])
+		self.trust_chanel_upfrontfee_entry.insert(0,struct_specs_IN['trust_upfrontfee'])
+		self.reinvestment_entry.insert(0,struct_specs_IN['reinvestment_vector'])
+		self.extra_reserve_account_entry.insert(0,struct_specs_IN['extra_reserve_account_buffer'])
+		self.passthrough_trigger_entry.insert(0,struct_specs_IN['pass_through_trigger_period'])
 
 class Securitization_GUI_Mgmt(Tkinter.Frame):
 	def __init__(self, master=None, struct_specifics_IN = None):
@@ -286,9 +316,8 @@ class Securitization_GUI_Mgmt(Tkinter.Frame):
 
 		self.specifics_initialize(struct_specifics_IN = struct_specifics_IN)
 
-		self.load_struct()
 
-	def get_specs(self):
+	def get_specs(self, if_raw_IN = False):
 		self.specs['upfront_fee'] = float(self.upfront_fee_entry.get())/100.0
 		self.specs['mgmt_fee'] = float(self.mgmt_fee_entry.get())/100.0
 		self.specs['mgmt_fee_freq'] = int(self.mgmt_fee_freq_entry.get())
@@ -302,8 +331,19 @@ class Securitization_GUI_Mgmt(Tkinter.Frame):
 		self.specs['mezz_freq'] = int(self.mezz_freq_entry.get())
 		self.specs['mezz_advrate'] = float(self.mezz_advrate_entry.get())/100.0
 
-		# f = open("F:\Work\Bohai Huijin Asset Management\Investment\Orcas\Debug\securitization_structspecifics.pkl",'wb')
-		# pickle.dump(self.specs,f)
+		if if_raw_IN:
+			self.specs['upfront_fee'] = self.upfront_fee_entry.get()
+			self.specs['mgmt_fee'] = self.mgmt_fee_entry.get()
+			self.specs['mgmt_fee_freq'] = self.mgmt_fee_freq_entry.get()
+			self.specs['prin_cf_split'] = self.prin_cf_split_option_combobox.get()
+
+			self.specs['snr_intrate'] = self.snr_1_intrate_entry.get()
+			self.specs['snr_freq'] = self.snr_1_freq_entry.get()
+			self.specs['snr_advrate'] = self.snr_1_advrate_entry.get()
+
+			self.specs['mezz_intrate'] = self.mezz_intrate_entry.get()
+			self.specs['mezz_freq'] = self.mezz_freq_entry.get()
+			self.specs['mezz_advrate'] = self.mezz_advrate_entry.get()
 
 	def specifics_initialize(self,struct_specifics_IN):
 
@@ -422,10 +462,29 @@ class Securitization_GUI_Mgmt(Tkinter.Frame):
 
 		self.notebook.add(self.page_4_mezz,text=u"夹层")
 
-	def load_struct(self):
-		pass
+	def load_struct(self,struct_specs_IN):
 
+		self.upfront_fee_entry.delete(0,'end')
+		self.mgmt_fee_entry.delete(0,'end')
+		self.mgmt_fee_freq_entry.delete(0,'end')
+		self.prin_cf_split_option_combobox.delete(0,'end')
+		self.snr_1_intrate_entry.delete(0,'end')
+		self.snr_1_freq_entry.delete(0,'end')
+		self.snr_1_advrate_entry.delete(0,'end')
+		self.mezz_intrate_entry.delete(0,'end')
+		self.mezz_freq_entry.delete(0,'end')
+		self.mezz_advrate_entry.delete(0,'end')
 
+		self.upfront_fee_entry.insert(0,struct_specs_IN['upfront_fee'])
+		self.mgmt_fee_entry.insert(0,struct_specs_IN['mgmt_fee'])
+		self.mgmt_fee_freq_entry.insert(0,struct_specs_IN['mgmt_fee_freq'])
+		self.prin_cf_split_option_combobox.insert(0,struct_specs_IN['prin_cf_split'])
+		self.snr_1_intrate_entry.insert(0,struct_specs_IN['snr_intrate'])
+		self.snr_1_freq_entry.insert(0,struct_specs_IN['snr_freq'])
+		self.snr_1_advrate_entry.insert(0,struct_specs_IN['snr_advrate'])
+		self.mezz_intrate_entry.insert(0,struct_specs_IN['mezz_intrate'])
+		self.mezz_freq_entry.insert(0,struct_specs_IN['mezz_freq'])
+		self.mezz_advrate_entry.insert(0,struct_specs_IN['mezz_advrate'])
 
 class Securitization_GUI_Mgmt_biblebook(Tkinter.Frame): # a very complicated and generic one
 	def __init__(self, master=None, struct_specifics_IN = None):

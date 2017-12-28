@@ -24,6 +24,7 @@ Mgmt_Static_Pool_File = os.path.join(Orcas_dir, 'Static_Pool\Mgmt_Static_Pool.pi
 Static_Pool_Folder = os.path.join(Orcas_dir, 'Static_Pool\\')
 
 Unlevered_Economics_Run_Folder = os.path.join(Orcas_dir, 'Unlevered_Economics_Run\\')
+Levered_Economics_Run_Folder = os.path.join(Orcas_dir, 'Levered_Economics_Run\\')
 
 Mgmt_Unlevered_Economics_Run_File = os.path.join(Orcas_dir, 'Unlevered_Economics_Run\Mgmt_Unlevered_Economics_Run.pickle')
 Mgmt_Levered_Economics_Run_File = os.path.join(Orcas_dir, 'Levered_Economics_Run\Mgmt_Levered_Economics_Run.pickle')
@@ -112,3 +113,9 @@ format_mapping = {
 struct_info_pkl = os.path.join(Orcas_dir, 'Struct_Specifics\\', '1.Struct_Info', '.pkl')
 
 # ********************** Strats **********************
+
+# ********************** Vintage **********************
+vintage_dimension_settings_columns_gui = [u'字段',u'组合规则',u'分层标签']
+vintage_measures_settings_columns_gui =  [u'字段',u'计算方式',u'运算辅助列',u'度量名称']
+
+# ********************** Vintage **********************

@@ -1,0 +1,11 @@
+*.html
+*.pyc
+<<<<<<< HEAD
+Unlevered_Economics_Run/
+=======
+*.pkl
+*.pickle
+/Unlevered_Economics_Run/Mgmt_Unlevered_Economics_Run.pickle
+/Struct_Model/Struct_GUI_Model.pyc
+/Config/Config.pyc
+>>>>>>> 0931612c9bf393b495ca194df6b47b61c088f13a

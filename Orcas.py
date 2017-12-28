@@ -54,11 +54,12 @@ import Strats_Analytics
 import Strats_Display
 from RTD_Analytics import RTD_Analytics
 
+# Vintage Analysis related
+from Vintage import Vintage_Interface
 reload(sys)
 sys.setdefaultencoding("gb2312")
 
 import getpass
-# orcas_user = 'HFan'
 orcas_user = getpass.getuser()
 
 class Orcas_Wrapper(Tkinter.Frame):
@@ -215,7 +216,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.databasetable_strVar = Tkinter.StringVar()
 		self.databasetable_option = ttk.Combobox(staticpoolpage_line_2, textvariable=self.databasetable_strVar, values=Config.production_table_list)
 
-		# self.databasetable_option = Tkinter.OptionMenu(staticpoolpage_line_2, self.databasetable_strVar, *Config.production_table_list)
 		self.databasetable_strVar.set(Config.production_table_list[0])
 		self.databasetable_option.pack(side = 'left')
 
@@ -312,8 +312,8 @@ class Orcas_Wrapper(Tkinter.Frame):
 			cashflow_engine_instance = cashloan_ctc_mode.cashloan_ctc_mode(credit_model_instance.static_pool, credit_model_instance.smm_matrix,credit_model_instance.mdr_matrix,sev_level,recovery_lag)
 
 		cashflow_engine_instance.run_cashflow()
-		# Cashflow Engine Finished
 
+		# Cashflow Engine Finished
 		new_unlevered_economics_run_num = max(self.Mgmt_Unlevered_Economics_df[u'资产池分析实例编号']) + 1
 		
 		output = open(Config.Unlevered_Economics_Run_Folder + str(new_unlevered_economics_run_num) + '.ll.pkl', 'wb')
@@ -459,7 +459,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.creditmodel_strVar = Tkinter.StringVar()
 		self.creditmodel_option = ttk.Combobox(unleveredeconomics_line_1_left_1,textvariable = self.creditmodel_strVar, values = Config.creditmodel_list)
 		self.creditmodel_option.bind("<<ComboboxSelected>>", credit_model_gui_pop)
-		# self.creditmodel_option = Tkinter.OptionMenu(unleveredeconomics_line_1_left, self.creditmodel_strVar, *Config.creditmodel_list,command = credit_model_gui_pop)
 		self.creditmodel_strVar.set(Config.creditmodel_list[0])
 
 
@@ -1189,6 +1188,13 @@ class Orcas_Wrapper(Tkinter.Frame):
 		financingmgmt_line_6 = Tkinter.Frame(self.FinancingMgmtPage_Frame,width = 1000)
 		financingmgmt_line_6.pack(side = 'top',fill = 'x',expand = 'yes')
 
+		financingmgmt_line_7 = Tkinter.Frame(self.FinancingMgmtPage_Frame)
+		financingmgmt_line_7.pack(side = 'top',fill = 'x')
+
+		financingmgmt_line_8 = Tkinter.Frame(self.FinancingMgmtPage_Frame)
+		financingmgmt_line_8.pack(side = 'top',fill = 'x',expand = 'yes')
+
+
 		def runLeveredEconomics():
 			# run first financing
 			self.first_financing_gui_mgmt.live_struct_mgmt.get_specs()
@@ -1281,23 +1287,305 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		self.Mgmt_Levered_Economics_Run_treeview = GUI_Utilities.Treeview_Mgmt(master = financingmgmt_line_6, df_IN = self.Mgmt_Levered_Economics_df)
 
+		newFinancingStructure_label = Tkinter.Label(financingmgmt_line_7,text = u"融资结构名称",relief = 'ridge')
+		newFinancingStructure_label.pack(side = 'left',fill = 'x',expand='yes')
 
-		self.runLeveredEconomics_Button = Tkinter.Button(financingmgmt_line_6, text = u"新创现金流分析(含融资)", command = runLeveredEconomics,bg = Config.Orcas_blue)
+		self.newFinancingStructure_entry = Tkinter.Entry(financingmgmt_line_7,width = 2,bg = Config.Orcas_blue)
+		self.newFinancingStructure_entry.pack(side = 'left',fill = 'x',expand='yes')
+
+		def saveFinancingStructure():
+			self.first_financing_gui_mgmt.live_struct_mgmt.get_specs(if_raw_IN = True)
+			self.second_financing_gui_mgmt.live_struct_mgmt.get_specs(if_raw_IN = True)
+
+			first_financing_name = self.first_financing_gui_mgmt.live_struct_name
+			first_financing_specs = self.first_financing_gui_mgmt.live_struct_mgmt.specs
+			second_financing_name = self.second_financing_gui_mgmt.live_struct_name
+			second_financing_specs = self.second_financing_gui_mgmt.live_struct_mgmt.specs
+
+			other_specs = dict()
+			other_specs['transition_period'] = self.phase1_phase2_trans_TextBox.get()
+			other_specs['ramping_vector'] =  self.ramping_TextBox.get()
+			other_specs['px_center'] =  self.financing_asset_px_center_TextBox.get()
+			other_specs['px_steps'] =  self.financing_asset_px_steps_TextBox.get()
+			other_specs['px_step_size'] =  self.financing_asset_px_step_size_TextBox.get()
+
+			first_financing = {}
+			first_financing['name'] = first_financing_name
+			first_financing['specs'] = first_financing_specs
+
+			second_financing = {}
+			second_financing['name'] = second_financing_name
+			second_financing['specs'] = second_financing_specs
+
+			new_financing_struct_num = max(self.Mgmt_Levered_Economics_df[u'融资结构编号']) + 1
+			new_financing_struct_name = self.newFinancingStructure_entry.get()
+
+			output = open(Config.Levered_Economics_Run_Folder + str(new_financing_struct_num) + '.first_financing.pkl', 'wb')
+			pickle.dump(first_financing, output)
+			output.close()
+
+			output = open(Config.Levered_Economics_Run_Folder + str(new_financing_struct_num) + '.second_financing.pkl', 'wb')
+			pickle.dump(second_financing, output)
+			output.close()
+
+			output = open(Config.Levered_Economics_Run_Folder + str(new_financing_struct_num) + '.other_specs.pkl', 'wb')
+			pickle.dump(other_specs, output)
+			output.close()
+
+			self.Mgmt_Levered_Economics_df.loc[max(self.Mgmt_Levered_Economics_df.index)+1] = [new_financing_struct_num,new_financing_struct_name,orcas_user,datetime.now()]
+			self.Mgmt_Levered_Economics_df.to_pickle(Config.Mgmt_Levered_Economics_Run_File)
+			self.Mgmt_Levered_Economics_Run_treeview.update_dataframe(self.Mgmt_Levered_Economics_df)
+
+
+		def loadFinancingStructure():
+			selected = self.Mgmt_Levered_Economics_Run_treeview.tree.selection()[0]
+			selected_values = self.Mgmt_Levered_Economics_Run_treeview.tree.item(selected,'values')
+			financing_struct_num = selected_values[0]
+
+			to_be_loaded_first_financing = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.first_financing.pkl'
+			to_be_loaded_second_financing = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.second_financing.pkl'
+			to_be_loaded_other_specs  = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.other_specs.pkl'
+
+			first_financing_pkl_file = open(to_be_loaded_first_financing, 'rb')
+			first_financing_pkl = pickle.load(first_financing_pkl_file)
+			first_financing_pkl_file.close()
+
+			second_financing_pkl_file = open(to_be_loaded_second_financing, 'rb')
+			second_financing_pkl = pickle.load(second_financing_pkl_file)
+			second_financing_pkl_file.close()
+
+			other_specs_pkl_file = open(to_be_loaded_other_specs, 'rb')
+			other_specs_pkl = pickle.load(other_specs_pkl_file)
+			other_specs_pkl_file.close()
+
+			self.phase1_phase2_trans_TextBox.delete(0,'end')
+			self.phase1_phase2_trans_TextBox.insert('end',other_specs_pkl['transition_period'])
+
+			self.ramping_TextBox.delete(0,'end')
+			self.ramping_TextBox.insert('end',other_specs_pkl['ramping_vector'])
+
+			self.financing_asset_px_center_TextBox.delete(0,'end')
+			self.financing_asset_px_center_TextBox.insert('end',other_specs_pkl['px_center'])
+
+			self.financing_asset_px_steps_TextBox.delete(0,'end')
+			self.financing_asset_px_steps_TextBox.insert('end',other_specs_pkl['px_steps'])
+
+			self.financing_asset_px_step_size_TextBox.delete(0,'end')
+			self.financing_asset_px_step_size_TextBox.insert('end',other_specs_pkl['px_step_size'])
+
+			self.first_financing_gui_mgmt.live_struct_name = first_financing_pkl['name']
+			self.second_financing_gui_mgmt.live_struct_name = second_financing_pkl['name']
+
+			self.first_financing_gui_mgmt.struct_option_strVar.set(self.first_financing_gui_mgmt.live_struct_name)
+			self.second_financing_gui_mgmt.struct_option_strVar.set(self.second_financing_gui_mgmt.live_struct_name)
+
+			self.first_financing_gui_mgmt.struct_setup()
+			self.second_financing_gui_mgmt.struct_setup()
+
+			self.first_financing_gui_mgmt.load_struct(first_financing_pkl['specs'])
+			self.second_financing_gui_mgmt.load_struct(second_financing_pkl['specs'])
+
+
+		def deleteFinancingStructure():
+			for selected in self.Mgmt_Levered_Economics_Run_treeview.tree.selection():
+				selected_values = self.Mgmt_Levered_Economics_Run_treeview.tree.item(selected,'values')
+				financing_struct_num = selected_values[0]
+				to_be_removed_first_financing = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.first_financing.pkl'
+				to_be_removed_second_financing = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.second_financing.pkl'
+				to_be_removed_other_specs  = Config.Levered_Economics_Run_Folder + str(financing_struct_num) + '.other_specs.pkl'
+
+				try:
+					os.remove(to_be_removed_first_financing)
+				except:
+					pass
+
+				try:
+					os.remove(to_be_removed_second_financing)
+				except:
+					pass	
+
+				try:
+					os.remove(to_be_removed_other_specs)
+				except:
+					pass
+
+				self.Mgmt_Levered_Economics_df = self.Mgmt_Levered_Economics_df[self.Mgmt_Levered_Economics_df[u'融资结构编号']!=int(financing_struct_num)]
+
+			self.Mgmt_Levered_Economics_df.to_pickle(Config.Mgmt_Levered_Economics_Run_File)
+			self.Mgmt_Levered_Economics_Run_treeview.update_dataframe(self.Mgmt_Levered_Economics_df)
+
+
+		self.saveFinancingStructure_Button = Tkinter.Button(financingmgmt_line_8, text = u"保存融资结构", command = saveFinancingStructure,bg = Config.Orcas_blue)
+		self.saveFinancingStructure_Button.pack(side = 'left')
+
+		self.loadFinancingStructure_Button = Tkinter.Button(financingmgmt_line_8, text = u"载入融资结构", command = loadFinancingStructure,bg = Config.Orcas_blue)
+		self.loadFinancingStructure_Button.pack(side = 'left')
+
+		self.deleteFinancingStructure_Button = Tkinter.Button(financingmgmt_line_8, text = u"删除融资结构", command = deleteFinancingStructure,bg = Config.Orcas_blue)
+		self.deleteFinancingStructure_Button.pack(side = 'left')
+
+		self.runLeveredEconomics_Button = Tkinter.Button(financingmgmt_line_8, text = u"新创现金流分析(含融资)", command = runLeveredEconomics,bg = Config.Orcas_blue)
 		self.runLeveredEconomics_Button.pack(side = 'left')
 
-		self.displayLeveredCF_Button = Tkinter.Button(financingmgmt_line_6, text = u"融资现金流", command = displayLeveredCF,bg = Config.Orcas_blue)
+		self.displayLeveredCF_Button = Tkinter.Button(financingmgmt_line_8, text = u"融资现金流", command = displayLeveredCF,bg = Config.Orcas_blue)
 		self.displayLeveredCF_Button.pack(side = 'left')
 
-		self.displayLeveredEconomics_Button = Tkinter.Button(financingmgmt_line_6, text = u"融资现金流指标", command = displayLeveredEconomics,bg = Config.Orcas_blue)
+		self.displayLeveredEconomics_Button = Tkinter.Button(financingmgmt_line_8, text = u"融资现金流指标", command = displayLeveredEconomics,bg = Config.Orcas_blue)
 		self.displayLeveredEconomics_Button.pack(side = 'left')
 		self.displayLeveredEconomics_Button.bind("<Button-3>", displayLeveredEconomics)
 
-		self.displayLeveredEconomicsGraph_Button = Tkinter.Button(financingmgmt_line_6, text = u"融资现金流走势", command = displayLeveredEconomicsGraph,bg = Config.Orcas_blue)
+		self.displayLeveredEconomicsGraph_Button = Tkinter.Button(financingmgmt_line_8, text = u"融资现金流走势", command = displayLeveredEconomicsGraph,bg = Config.Orcas_blue)
 		self.displayLeveredEconomicsGraph_Button.pack(side = 'left')
 
 	def VintageAnalysisPage_design(self):
 		self.VintageAnalysisPage_Frame = Tkinter.Frame(self.grand_left_frame)
 		self.VintageAnalysisPage_Frame.pack(expand=1, fill="both")
+
+		self.VintageAnalysisPage_Upper_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Frame,width = 600,height = 100,borderwidth = 2)
+		self.VintageAnalysisPage_Upper_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+		self.VintageAnalysisPage_Upper_Frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_Middle_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Frame,width = 600,height = 400,borderwidth = 2)
+		self.VintageAnalysisPage_Middle_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+		self.VintageAnalysisPage_Middle_Frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_Lower_Frame = Tkinter.Frame(self.VintageAnalysisPage_Frame)
+		self.VintageAnalysisPage_Lower_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+
+		self.VintageAnalysisPage_Middle_1_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_Frame,width = 600,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_Middle_1_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+		self.VintageAnalysisPage_Middle_1_Frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_Middle_2_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_Frame,width = 600,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_Middle_2_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+		self.VintageAnalysisPage_Middle_2_Frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_221_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_1_Frame,width = 300,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_221_frame.pack(side = 'left',anchor = 'n')
+		self.VintageAnalysisPage_221_frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_222_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_1_Frame,width = 300,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_222_frame.pack(side = 'left',anchor = 'n')
+		self.VintageAnalysisPage_222_frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_223_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_2_Frame,width = 300,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_223_frame.pack(side = 'left',anchor = 'n')
+		self.VintageAnalysisPage_223_frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_224_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_2_Frame,width = 300,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_224_frame.pack(side = 'left',anchor = 'n')
+		self.VintageAnalysisPage_224_frame.pack_propagate(False)
+
+		self.VintageAnalysisPage_left_line_2_frame = Tkinter.Frame(self.VintageAnalysisPage_Upper_Frame)
+		self.VintageAnalysisPage_left_line_2_frame.pack(side = 'top')
+		self.strats_gui_mgmt = Vintage_Interface.Vintage_settings(self.VintageAnalysisPage_left_line_2_frame)
+
+		self.VintageAnalysisPage_right_line_1_frame = Tkinter.Frame(self.VintageAnalysisPage_221_frame)
+		self.VintageAnalysisPage_right_line_1_frame.pack(side = 'top', fill ='both', expand = 'yes')
+		self.VintageAnalysisPage_right_line_1_canvas = Tkinter.Canvas(self.VintageAnalysisPage_right_line_1_frame, width=800, height=500, bg="white")
+		self.VintageAnalysisPage_right_line_1_new_frame = Tkinter.Frame(self.VintageAnalysisPage_right_line_1_canvas)
+
+		ysb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_1_frame,orient='vertical', command= self.VintageAnalysisPage_right_line_1_canvas.yview)
+		self.VintageAnalysisPage_right_line_1_canvas.configure(yscrollcommand=ysb.set)
+		ysb.pack(side = 'right',fill = 'y')
+
+		xsb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_1_frame, orient='horizontal', command= self.VintageAnalysisPage_right_line_1_canvas.xview)
+		self.VintageAnalysisPage_right_line_1_canvas.configure(xscrollcommand=xsb.set)
+		xsb.pack(side = 'bottom',fill = 'x')
+
+		self.VintageAnalysisPage_right_line_1_canvas.pack(side = 'left')
+		self.VintageAnalysisPage_right_line_1_canvas.create_window((0,1), window=self.VintageAnalysisPage_right_line_1_new_frame, anchor="nw")
+
+		def reconfigure_scrollregion1(event):
+			self.VintageAnalysisPage_right_line_1_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_1_canvas.bbox("all"))
+
+		self.VintageAnalysisPage_right_line_1_new_frame.bind("<Configure>",reconfigure_scrollregion1)
+
+		self.strats_dimension_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_1_new_frame,title_list_IN=Config.vintage_dimension_settings_columns_gui,BoxGroup_width_IN = 9,Label_width_IN = 11,add_condition_button_text_IN = u'添加维度',delete_condition_button_text_IN = u'删除维度',style_IN = 'ComboBox')
+
+		self.VintageAnalysisPage_right_line_2_frame = Tkinter.Frame(self.VintageAnalysisPage_222_frame)
+		self.VintageAnalysisPage_right_line_2_frame.pack(side = 'top', fill ='both', expand = 'yes')
+		self.VintageAnalysisPage_right_line_2_canvas = Tkinter.Canvas(self.VintageAnalysisPage_right_line_2_frame, width=800, height=500, bg="white")
+		self.VintageAnalysisPage_right_line_2_new_frame = Tkinter.Frame(self.VintageAnalysisPage_right_line_2_canvas)
+
+		ysb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_2_frame,orient='vertical', command= self.VintageAnalysisPage_right_line_2_canvas.yview)
+		self.VintageAnalysisPage_right_line_2_canvas.configure(yscrollcommand=ysb.set)
+		ysb.pack(side = 'right',fill = 'y')
+
+		xsb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_2_frame, orient='horizontal', command= self.VintageAnalysisPage_right_line_2_canvas.xview)
+		self.VintageAnalysisPage_right_line_2_canvas.configure(xscrollcommand=xsb.set)
+		xsb.pack(side = 'bottom',fill = 'x')
+
+		self.VintageAnalysisPage_right_line_2_canvas.pack(side = 'left')
+		self.VintageAnalysisPage_right_line_2_canvas.create_window((0,1), window=self.VintageAnalysisPage_right_line_2_new_frame, anchor="nw")
+
+		def reconfigure_scrollregion2(event):
+			self.VintageAnalysisPage_right_line_2_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_2_canvas.bbox("all"))
+		self.VintageAnalysisPage_right_line_2_new_frame.bind("<Configure>",reconfigure_scrollregion2)
+
+		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_2_new_frame,
+			title_list_IN=Config.vintage_measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加指标',
+			delete_condition_button_text_IN = u'删除指标',style_IN = 'ComboBox')
+
+
+		self.VintageAnalysisPage_right_line_3_frame = Tkinter.Frame(self.VintageAnalysisPage_223_frame)
+		self.VintageAnalysisPage_right_line_3_frame.pack(side = 'top', fill ='both', expand = 'yes')
+		self.VintageAnalysisPage_right_line_3_canvas = Tkinter.Canvas(self.VintageAnalysisPage_right_line_3_frame, width=800, height=500, bg="white")
+		self.VintageAnalysisPage_right_line_3_new_frame = Tkinter.Frame(self.VintageAnalysisPage_right_line_3_canvas)
+
+		ysb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_3_frame,orient='vertical', command= self.VintageAnalysisPage_right_line_3_canvas.yview)
+		self.VintageAnalysisPage_right_line_3_canvas.configure(yscrollcommand=ysb.set)
+		ysb.pack(side = 'right',fill = 'y')
+
+		xsb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_3_frame, orient='horizontal', command= self.VintageAnalysisPage_right_line_3_canvas.xview)
+		self.VintageAnalysisPage_right_line_3_canvas.configure(xscrollcommand=xsb.set)
+		xsb.pack(side = 'bottom',fill = 'x')
+
+		self.VintageAnalysisPage_right_line_3_canvas.pack(side = 'left')
+		self.VintageAnalysisPage_right_line_3_canvas.create_window((0,1), window=self.VintageAnalysisPage_right_line_3_new_frame, anchor="nw")
+
+		def reconfigure_scrollregion3(event):
+			self.VintageAnalysisPage_right_line_3_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_3_canvas.bbox("all"))
+		self.VintageAnalysisPage_right_line_3_new_frame.bind("<Configure>",reconfigure_scrollregion3)
+
+		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_3_new_frame,
+			title_list_IN=Config.vintage_measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加指标',
+			delete_condition_button_text_IN = u'删除指标',style_IN = 'ComboBox')
+
+
+
+		self.VintageAnalysisPage_right_line_4_frame = Tkinter.Frame(self.VintageAnalysisPage_224_frame)
+		self.VintageAnalysisPage_right_line_4_frame.pack(side = 'top', fill ='both', expand = 'yes')
+		self.VintageAnalysisPage_right_line_4_canvas = Tkinter.Canvas(self.VintageAnalysisPage_right_line_4_frame, width=800, height=500, bg="white")
+		self.VintageAnalysisPage_right_line_4_new_frame = Tkinter.Frame(self.VintageAnalysisPage_right_line_4_canvas)
+
+		ysb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_4_frame,orient='vertical', command= self.VintageAnalysisPage_right_line_4_canvas.yview)
+		self.VintageAnalysisPage_right_line_4_canvas.configure(yscrollcommand=ysb.set)
+		ysb.pack(side = 'right',fill = 'y')
+
+		xsb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_4_frame, orient='horizontal', command= self.VintageAnalysisPage_right_line_4_canvas.xview)
+		self.VintageAnalysisPage_right_line_4_canvas.configure(xscrollcommand=xsb.set)
+		xsb.pack(side = 'bottom',fill = 'x')
+
+		self.VintageAnalysisPage_right_line_4_canvas.pack(side = 'left')
+		self.VintageAnalysisPage_right_line_4_canvas.create_window((0,1), window=self.VintageAnalysisPage_right_line_4_new_frame, anchor="nw")
+
+		def reconfigure_scrollregion4(event):
+			self.VintageAnalysisPage_right_line_4_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_4_canvas.bbox("all"))
+		self.VintageAnalysisPage_right_line_4_new_frame.bind("<Configure>",reconfigure_scrollregion4)
+
+		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_4_new_frame,
+			title_list_IN=Config.vintage_measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加指标',
+			delete_condition_button_text_IN = u'删除指标',style_IN = 'ComboBox')
+
+
+		def run_vintage_analysis(events = None):
+			print "to be deleloped"
+
+
+		self.vintageanalysispage_run_vintage_button = Tkinter.Button(self.VintageAnalysisPage_Lower_Frame,text = u"批次分析", command = run_vintage_analysis,bg = Config.Orcas_blue)
+		self.vintageanalysispage_run_vintage_button.pack(side = 'left',anchor = 'w')
+		self.vintageanalysispage_run_vintage_button.bind("<Button-3>", run_vintage_analysis)
 
 def main():
 	root = Tkinter.Tk()
