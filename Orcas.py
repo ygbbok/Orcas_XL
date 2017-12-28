@@ -835,7 +835,8 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.strats_measures_settings.reload_combo_box_values_list(measure_dropdownlist)
 
 
-		self.stratspage_pre_run_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"参数预设", command = strats_columns_dropdown_setup,bg = Config.Orcas_blue)
+		self.stratspage_pre_run_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"参数预设", command = strats_columns_dropdown_setup,
+			bg = Config.Orcas_blue)
 		self.stratspage_pre_run_button.pack(side = 'left',anchor = 'w')
 
 		def run_strats(events = None):
@@ -937,7 +938,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 				strats_label.pack(side = 'top')
 
 				txt_file_name = temp_strats_folder_dir + "\\" + sl_key + "_" + "strats" + '.txt'
-				res = pd.read_csv(txt_file_name, header = "infer", sep = '|',encoding='gb2312')
+				res = pd.read_csv(txt_file_name, header = "infer", sep = '|', encoding = 'gb2312')
 				res = res.set_index(res.columns.values[0])
 				formatter = {}
 				strats_columns = res.columns.values
@@ -946,7 +947,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 				formatter = dict([(item_a,Config.format_mapping[item_b]) for item_a,item_b in zip(formatter_holder['col_name'],formatter_holder['format'])])
 
 				new_strat_line_2_frame = Tkinter.Frame(new_strat_frame)
-				new_strat_line_2_frame.pack(side = 'top',fill='both',expand = 'yes', pady = 5)
+				new_strat_line_2_frame.pack(side = 'top', fill = 'both', expand = 'yes', pady = 5)
 
 				GUI_Utilities.DisplayTable_Mgmt(new_strat_line_2_frame,res,formatter,horizontal_mapper = False)
 
@@ -1008,11 +1009,13 @@ class Orcas_Wrapper(Tkinter.Frame):
 				title_list_IN = Config.mappingrule_settings_columns_gui, BoxGroup_width_IN = 6, Label_width_IN = 8, add_condition_button_text_IN = u'添加分组',
 				delete_condition_button_text_IN = u'删除分组', style_IN = 'ComboBox')
 
-			#self.group_rule_quit_button = Tkinter.Button(self.modify_group_rule_new_frame, text = "关闭", command = self.group_rule_main.destroy)
-        	#self.group_rule_quit_button.pack(side = 'bottom')
+			self.group_rule_lower_frame = Tkinter.Frame(self.group_rule_main)
+			self.group_rule_lower_frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+			self.group_rule_quit_button = Tkinter.Button(self.group_rule_lower_frame, text = "关闭", command = self.group_rule_main.destroy)
+        	# self.group_rule_quit_button.pack(side = 'bottom')
 
 
-		self.modify_group_rule_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"分组调整", command = modify_group_rule, bg = Config.Orcas_blue)
+		self.modify_group_rule_button = Tkinter.Button(self.StratsPage_Lower_Frame, text = u"分组调整", command = modify_group_rule, bg = Config.Orcas_blue)
 		self.modify_group_rule_button.pack(side = 'left',anchor = 'w')
 
 		def load_strats_settings():
