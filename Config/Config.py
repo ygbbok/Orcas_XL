@@ -115,9 +115,24 @@ struct_info_pkl = os.path.join(Orcas_dir, 'Struct_Specifics\\', '1.Struct_Info',
 # ********************** Strats **********************
 
 # ********************** Vintage **********************
-vintage_dimension_settings_columns_gui = [u'字段',u'组合规则',u'分层标签']
+vintage_dimension_settings_columns_gui = [u'字段',u'组合规则',u'标签']
+vintage_dimension_settings_columns_txt = [u'column',u'group_rule',u'label']
+
 vintage_measures_settings_columns_gui =  [u'字段',u'计算方式',u'运算辅助列',u'度量名称']
+vintage_measures_settings_columns_txt =  [u'column',u'calc_method',u'calc_helper','col_name']
+
 vintage_condition_settings_columns_gui = [u'逻辑',u'字段',u'运算符',u'参数',u'数据类型']
+vintage_condition_settings_columns_txt = [u'logic',u'column',u'operator',u'argument',u'datatype']
+
 vintage_grouping_settings_columns_gui = [u'编号',u'左边界',u'右边界',u'标签']
+vintage_grouping_settings_columns_txt= [u'index',u'lower_bound',u'upper_bound',u'label']
+
+
+
+
+conditions_logical_list = ['and','or']
+conditions_operation_list = ['=','<=','<','>=','>']
+conditions_datatype_list = ['int','str']
+
 
 # ********************** Vintage **********************
