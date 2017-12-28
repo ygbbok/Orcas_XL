@@ -87,6 +87,7 @@ dimension_settings_columns_txt = [u'column',u'group_rule',u'strats_label']
 measures_settings_columns_gui = [u'字段',u'运算符',u'运算辅助列',u'度量名称',u'格式']
 measures_settings_columns_txt = [u'column',u'calc_method',u'calc_helper','col_name','format']
 
+mappingrule_settings_columns_gui = [u'分组编号',u'下限',u'上限',u'分组标签']
 mappingrule_settings_columns_db = [u'Rule_Idx',u'Lower_Bound',u'Upper_Bound','Label']
 mappingrule_settings_columns_txt = [u'Rule_Name',u'Lower_Bound',u'Upper_Bound','Label']
 

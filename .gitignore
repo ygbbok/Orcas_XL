@@ -1,7 +1,3 @@
 *.html
 *.pyc
-*.pkl
-*.pickle
-/Unlevered_Economics_Run/Mgmt_Unlevered_Economics_Run.pickle
-/Struct_Model/Struct_GUI_Model.pyc
-/Config/Config.pyc
+Unlevered_Economics_Run/

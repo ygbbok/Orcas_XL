@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+############# comment
+
 import sys
 import os
 import shutil
@@ -113,7 +115,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 	def update_unlevered_economics_static_pool_optionmenu(self):
 		self.Mgmt_Static_Pool_list = list(self.Mgmt_Static_Pool_df[u'资产池编号'].astype(str) + " - " + self.Mgmt_Static_Pool_df[u'资产池名称'].astype(str))
 		self.Static_Pool_option['values'] = [unicode(item) for item in self.Mgmt_Static_Pool_list]
-					
+
 	def createStaticPool(self):
 
 		static_pool_name = self.StaticPoolName_TextBox.get()
@@ -791,33 +793,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 			title_list_IN=Config.measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加度量',
 			delete_condition_button_text_IN = u'删除度量',style_IN = 'ComboBox')
 
-		###################################### For GroupRule ######################################
-
-		# self.stratspage_right_line_3_frame = Tkinter.Frame(self.stratspage_right_frame)
-		# self.stratspage_right_line_3_frame.pack(side = 'top', fill ='both', expand = 'yes')
-		# self.stratspage_right_line_3_canvas = Tkinter.Canvas(self.stratspage_right_line_3_frame, width=800, height=500, bg="white")
-		# self.stratspage_right_line_3_new_frame = Tkinter.Frame(self.stratspage_right_line_3_canvas)
-
-		# ysb = ttk.Scrollbar(self.stratspage_right_line_3_frame,orient='vertical', command= self.stratspage_right_line_3_canvas.yview)
-		# self.stratspage_right_line_3_canvas.configure(yscrollcommand=ysb.set)
-		# ysb.pack(side = 'right',fill = 'y')
-
-		# xsb = ttk.Scrollbar(self.stratspage_right_line_3_frame, orient='horizontal', command= self.stratspage_right_line_3_canvas.xview)
-		# self.stratspage_right_line_3_canvas.configure(xscrollcommand=xsb.set)
-		# xsb.pack(side = 'bottom',fill = 'x')
-
-		# self.stratspage_right_line_3_canvas.pack(side = 'left')
-		# self.stratspage_right_line_3_canvas.create_window((0,1), window=self.stratspage_right_line_3_new_frame, anchor="nw")
-
-		# def reconfigure_scrollregion3(event):
-		# 	self.stratspage_right_line_3_canvas.configure(scrollregion=self.stratspage_right_line_3_canvas.bbox("all"))
-		# self.stratspage_right_line_3_new_frame.bind("<Configure>",reconfigure_scrollregion3)
-
-		# self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.stratspage_right_line_3_new_frame,
-		# 	title_list_IN=Config.measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加分组',
-		# 	delete_condition_button_text_IN = u'删除分组',style_IN = 'ComboBox')
-
-		###################################### For GroupRule ######################################
 
 		def run_rtd(events = None):
 			temp_rtd_txt = Config.temp_rtd_txt
@@ -860,7 +835,8 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.strats_measures_settings.reload_combo_box_values_list(measure_dropdownlist)
 
 
-		self.stratspage_pre_run_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"参数预设", command = strats_columns_dropdown_setup,bg = Config.Orcas_blue)
+		self.stratspage_pre_run_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"参数预设", command = strats_columns_dropdown_setup,
+			bg = Config.Orcas_blue)
 		self.stratspage_pre_run_button.pack(side = 'left',anchor = 'w')
 
 		def run_strats(events = None):
@@ -962,7 +938,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 				strats_label.pack(side = 'top')
 
 				txt_file_name = temp_strats_folder_dir + "\\" + sl_key + "_" + "strats" + '.txt'
-				res = pd.read_csv(txt_file_name, header = "infer", sep = '|',encoding='gb2312')
+				res = pd.read_csv(txt_file_name, header = "infer", sep = '|', encoding = 'gb2312')
 				res = res.set_index(res.columns.values[0])
 				formatter = {}
 				strats_columns = res.columns.values
@@ -971,7 +947,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 				formatter = dict([(item_a,Config.format_mapping[item_b]) for item_a,item_b in zip(formatter_holder['col_name'],formatter_holder['format'])])
 
 				new_strat_line_2_frame = Tkinter.Frame(new_strat_frame)
-				new_strat_line_2_frame.pack(side = 'top',fill='both',expand = 'yes', pady = 5)
+				new_strat_line_2_frame.pack(side = 'top', fill = 'both', expand = 'yes', pady = 5)
 
 				GUI_Utilities.DisplayTable_Mgmt(new_strat_line_2_frame,res,formatter,horizontal_mapper = False)
 
@@ -989,21 +965,58 @@ class Orcas_Wrapper(Tkinter.Frame):
 			res = res_list[0]
 			IO_Utilities.IO_Util.open_in_html(res)
 
-		self.stratspage_display_group_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"分组规则", command = display_mapping_group,bg = Config.Orcas_blue)
+		self.stratspage_display_group_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"分组规则", command = display_mapping_group,
+			bg = Config.Orcas_blue)
 		self.stratspage_display_group_button.pack(side = 'left',anchor = 'w')
 
 		def modify_group_rule():
-			# modify_group_rule_frame = Tkinter.Frame()
-			# modify_group_rule_frame.pack(side = 'left')
-			GroupRulePage_Frame = Tkinter.Frame(modify_group_rule_frame)
-			GroupRulePage_Frame.pack(expand=1, fill="both")
-			# sql_query = "SELECT * FROM [Orcas_Operation].[dbo].[Strats_GroupRule_Mapping]"
-			# res_list = IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 1,database = Config.orcas_operation_db)
-			# res = res_list[0]
-			# IO_Utilities.IO_Util.open_in_html(res)
+			self.group_rule_main = Tkinter.Tk()
+			self.group_rule_main.title("分组调整")
+			self.modify_group_rule_frame = Tkinter.Frame(self.group_rule_main)
+			self.modify_group_rule_frame.pack(side = 'top')
 
-		self.stratspage_display_group_button = Tkinter.Button(self.StratsPage_Lower_Frame,text = u"分组调整", command = modify_group_rule,bg = Config.Orcas_blue)
-		self.stratspage_display_group_button.pack(side = 'left',anchor = 'w')
+			self.modify_group_rule_canvas = Tkinter.Canvas(self.modify_group_rule_frame, width=500, height=500#, bg="white"
+				)
+			self.modify_group_rule_new_frame = Tkinter.Frame(self.modify_group_rule_canvas)
+
+			# self.GroupRulePage_Frame = Tkinter.Frame(self.modify_group_rule_frame)
+			# self.GroupRulePage_Frame.pack(expand=1, fill="both")
+
+
+			###################################### For GroupRule ######################################
+
+			# self.stratspage_right_line_3_frame = Tkinter.Frame(self.stratspage_right_frame)
+			# self.stratspage_right_line_3_frame.pack(side = 'top', fill ='both', expand = 'yes')
+			# self.stratspage_right_line_3_canvas = Tkinter.Canvas(self.stratspage_right_line_3_frame, width=800, height=500, bg="white")
+			# self.stratspage_right_line_3_new_frame = Tkinter.Frame(self.stratspage_right_line_3_canvas)
+
+			ysb = ttk.Scrollbar(self.modify_group_rule_frame,orient='vertical', command= self.modify_group_rule_canvas.yview)
+			self.modify_group_rule_canvas.configure(yscrollcommand=ysb.set)
+			ysb.pack(side = 'right',fill = 'y')
+
+			xsb = ttk.Scrollbar(self.modify_group_rule_frame, orient='horizontal', command= self.modify_group_rule_canvas.xview)
+			self.modify_group_rule_canvas.configure(xscrollcommand=xsb.set)
+			xsb.pack(side = 'bottom',fill = 'x')
+
+			self.modify_group_rule_canvas.pack(side = 'left')
+			self.modify_group_rule_canvas.create_window((0,1), window=self.modify_group_rule_new_frame, anchor="nw")
+
+			def reconfigure_scrollregion3(event):
+				self.modify_group_rule_canvas.configure(scrollregion=self.modify_group_rule_canvas.bbox("all"))
+			self.modify_group_rule_new_frame.bind("<Configure>",reconfigure_scrollregion3)
+
+			self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.modify_group_rule_new_frame,
+				title_list_IN = Config.mappingrule_settings_columns_gui, BoxGroup_width_IN = 6, Label_width_IN = 8, add_condition_button_text_IN = u'添加分组',
+				delete_condition_button_text_IN = u'删除分组', style_IN = 'ComboBox')
+
+			self.group_rule_lower_frame = Tkinter.Frame(self.group_rule_main)
+			self.group_rule_lower_frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
+			self.group_rule_quit_button = Tkinter.Button(self.group_rule_lower_frame, text = "关闭", command = self.group_rule_main.destroy)
+        	# self.group_rule_quit_button.pack(side = 'bottom')
+
+
+		self.modify_group_rule_button = Tkinter.Button(self.StratsPage_Lower_Frame, text = u"分组调整", command = modify_group_rule, bg = Config.Orcas_blue)
+		self.modify_group_rule_button.pack(side = 'left',anchor = 'w')
 
 		def load_strats_settings():
 			strats_idx = self.strats_gui_mgmt.combobox_Strats_Idx.get()
