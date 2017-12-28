@@ -1605,12 +1605,57 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 
 		def run_vintage_analysis(events = None):
-			print "to be deleloped"
 
+			self.vintageanalysis_dimension_settings.get_all(dict_type =True)
+			vintageanalysis_dimension_df = pd.DataFrame(self.vintageanalysis_dimension_settings.res)
+
+			vintageanalysis_dimension_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in zip(Config.vintage_dimension_settings_columns_gui,Config.vintage_dimension_settings_columns_txt)])
+			vintageanalysis_dimension_df = vintageanalysis_dimension_df.rename(columns = vintageanalysis_dimension_columns)
+			vintageanalysis_dimension_df = vintageanalysis_dimension_df[Config.vintage_dimension_settings_columns_txt]
+
+			self.vintageanalysis_measures_settings.get_all(dict_type =True)
+			vintageanalysis_measures_df = pd.DataFrame(self.vintageanalysis_measures_settings.res)
+
+			vintageanalysis_measures_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in zip(Config.vintage_measures_settings_columns_gui,Config.vintage_measures_settings_columns_txt)])
+			vintageanalysis_measures_df = vintageanalysis_measures_df.rename(columns = vintageanalysis_measures_columns)
+			vintageanalysis_measures_df = vintageanalysis_measures_df[Config.vintage_measures_settings_columns_txt]
+
+			print "One Quarter is done; rest to be developed"
+
+
+		def run_rtd():
+			temp_rtd_txt = Config.temp_rtd_txt
+			rt_txt = self.vintageanalysis_gui_mgmt.text_Vintageanalysis_RT_Dir.get("1.0","end-1c")
+			df = pd.read_csv(rt_txt, sep = ',')
+			RTD_Analytics_instance = RTD_Analytics(df)
+			rtd_res = RTD_Analytics_instance.analytics_procedure()
+			self.rtd_res = rtd_res
+			IO_Utilities.IO_Util.output_to_txt(rtd_res, temp_rtd_txt)
+
+		def vintageanalysis_columns_dropdown_setup():
+			run_rtd()
+
+			column_dropdown_list = [unicode(item) for item in list(self.rtd_res['name'].values)]
+
+			self.vintageanalysis_gui_mgmt.combobox_Loan_Identity['values'] = column_dropdown_list
+			self.vintageanalysis_gui_mgmt.combobox_Timeschedule['values'] = column_dropdown_list
+
+			dimesion_dropdown_list = [column_dropdown_list,[],[]]
+			measure_dropdownlist = [column_dropdown_list,[],column_dropdown_list,[]]
+			conditions_dropdown_list = [Config.conditions_logical_list,column_dropdown_list,Config.conditions_operation_list,[],Config.conditions_datatype_list]
+			grouping_dropdown_list = [[],[],[],[]]
+
+			self.vintageanalysis_dimension_settings.reload_combo_box_values_list(dimesion_dropdown_list)
+			self.vintageanalysis_measures_settings.reload_combo_box_values_list(measure_dropdownlist)
+			self.vintageanalysis_conditions_settings.reload_combo_box_values_list(conditions_dropdown_list)
+			self.vintageanalysis_grouping_settings.reload_combo_box_values_list(grouping_dropdown_list)
 
 		self.vintageanalysispage_run_vintage_button = Tkinter.Button(self.VintageAnalysisPage_Lower_Frame,text = u"批次分析", command = run_vintage_analysis,bg = Config.Orcas_blue)
 		self.vintageanalysispage_run_vintage_button.pack(side = 'left',anchor = 'w')
 		self.vintageanalysispage_run_vintage_button.bind("<Button-3>", run_vintage_analysis)
+
+		self.vintageanalysispage_dropdown_setup_button = Tkinter.Button(self.VintageAnalysisPage_Lower_Frame,text = u"参数预设", command = vintageanalysis_columns_dropdown_setup,bg = Config.Orcas_blue)
+		self.vintageanalysispage_dropdown_setup_button.pack(side = 'left',anchor = 'w')
 
 def main():
 	root = Tkinter.Tk()
