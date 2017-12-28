@@ -1007,7 +1007,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		def load_strats_settings():
 			strats_idx = self.strats_gui_mgmt.combobox_Strats_Idx.get()
-
 			sql_query = "SELECT * FROM [Orcas_Operation].[dbo].[Strats_Idx_Name] WHERE [Strats_Idx] = " + strats_idx
 			res_list = IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 1,database = Config.orcas_operation_db)
 			strat_res = res_list[0]
@@ -1468,7 +1467,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		self.VintageAnalysisPage_left_line_2_frame = Tkinter.Frame(self.VintageAnalysisPage_Upper_Frame)
 		self.VintageAnalysisPage_left_line_2_frame.pack(side = 'top')
-		self.strats_gui_mgmt = Vintage_Interface.Vintage_settings(self.VintageAnalysisPage_left_line_2_frame)
+		self.vintageanalysis_gui_mgmt = Vintage_Interface.Vintage_settings(self.VintageAnalysisPage_left_line_2_frame)
 
 		self.VintageAnalysisPage_right_line_1_frame = Tkinter.Frame(self.VintageAnalysisPage_221_frame)
 		self.VintageAnalysisPage_right_line_1_frame.pack(side = 'top', fill ='both', expand = 'yes')
@@ -1491,7 +1490,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		self.VintageAnalysisPage_right_line_1_new_frame.bind("<Configure>",reconfigure_scrollregion1)
 
-		self.strats_dimension_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_1_new_frame,title_list_IN=Config.vintage_dimension_settings_columns_gui,BoxGroup_width_IN = 9,Label_width_IN = 11,add_condition_button_text_IN = u'添加维度',delete_condition_button_text_IN = u'删除维度',style_IN = 'ComboBox')
+		self.vintageanalysis_dimension_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_1_new_frame,title_list_IN=Config.vintage_dimension_settings_columns_gui,BoxGroup_width_IN = 9,Label_width_IN = 11,add_condition_button_text_IN = u'添加维度',delete_condition_button_text_IN = u'删除维度',style_IN = 'ComboBox')
 
 		self.VintageAnalysisPage_right_line_2_frame = Tkinter.Frame(self.VintageAnalysisPage_222_frame)
 		self.VintageAnalysisPage_right_line_2_frame.pack(side = 'top', fill ='both', expand = 'yes')
@@ -1513,7 +1512,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.VintageAnalysisPage_right_line_2_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_2_canvas.bbox("all"))
 		self.VintageAnalysisPage_right_line_2_new_frame.bind("<Configure>",reconfigure_scrollregion2)
 
-		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_2_new_frame,
+		self.vintageanalysis_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_2_new_frame,
 			title_list_IN=Config.vintage_measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加指标',
 			delete_condition_button_text_IN = u'删除指标',style_IN = 'ComboBox')
 
@@ -1538,10 +1537,9 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.VintageAnalysisPage_right_line_3_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_3_canvas.bbox("all"))
 		self.VintageAnalysisPage_right_line_3_new_frame.bind("<Configure>",reconfigure_scrollregion3)
 
-		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_3_new_frame,
-			title_list_IN=Config.vintage_measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加指标',
-			delete_condition_button_text_IN = u'删除指标',style_IN = 'ComboBox')
-
+		self.vintageanalysis_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_3_new_frame,
+			title_list_IN=Config.vintage_condition_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加条件',
+			delete_condition_button_text_IN = u'删除条件',style_IN = 'ComboBox')
 
 
 		self.VintageAnalysisPage_right_line_4_frame = Tkinter.Frame(self.VintageAnalysisPage_224_frame)
@@ -1564,9 +1562,9 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.VintageAnalysisPage_right_line_4_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_4_canvas.bbox("all"))
 		self.VintageAnalysisPage_right_line_4_new_frame.bind("<Configure>",reconfigure_scrollregion4)
 
-		self.strats_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_4_new_frame,
-			title_list_IN=Config.vintage_measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加指标',
-			delete_condition_button_text_IN = u'删除指标',style_IN = 'ComboBox')
+		self.vintageanalysis_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_4_new_frame,
+			title_list_IN=Config.vintage_grouping_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加分组',
+			delete_condition_button_text_IN = u'删除分组',style_IN = 'ComboBox')
 
 
 		def run_vintage_analysis(events = None):
