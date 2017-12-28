@@ -1,0 +1,3 @@
+column|group_rule|strats_label
+||
+||
