@@ -993,7 +993,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 			for i in range(0, row_num):
 				if (len(mapping_rule_df.iloc[i][0]) + len(mapping_rule_df.iloc[i][1]) + len(mapping_rule_df.iloc[i][2])
 					+ len(mapping_rule_df.iloc[i][3])) != 0:
-					insert_value = insert_value + "(" + mapping_rule_df.iloc[i][0] + ", " + mapping_rule_df.iloc[i][1] + ", " + mapping_rule_df.iloc[i][2] + ", '" + mapping_rule_df.iloc[i][3] + "')"
+					insert_value = insert_value + "(" + "'" + mapping_rule_df.iloc[i][0] + "'" + ", " + "'" + mapping_rule_df.iloc[i][1] + "'" + ", " + "'" + mapping_rule_df.iloc[i][2] + "'" + ", '" + mapping_rule_df.iloc[i][3] + "')"
 				if i != row_num - 1:
 					insert_value = insert_value + ","	
 
