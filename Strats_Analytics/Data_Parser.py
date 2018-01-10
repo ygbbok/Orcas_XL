@@ -10,12 +10,22 @@ reload(sys)
 sys.setdefaultencoding( "gb2312" )
 
 class Data_Parser(object):
-	def __init__(self, the_df):
+	def __init__(self, the_df,add_code_IN = ''):
 		self.df = the_df
+		self.add_code = add_code_IN
+		self.add_code_list = self.add_code.split('\n')
+
 		self.datatype_dict = dict()
+
+	def run_add_code(self):
+		for add_code_item in (self.add_code_list):
+			print add_code_item
+			exec(add_code_item)
 
 	def parser_procedure(self):
 		self.df = self.df.dropna(axis = 1, how = 'all')
+		self.run_add_code()
+
 		for col in self.df.columns.values:
 			switched = False
 			datatype = self.df[col].dtype

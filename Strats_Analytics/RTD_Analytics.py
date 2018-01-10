@@ -13,11 +13,12 @@ reload(sys)
 sys.setdefaultencoding( "gb2312" )
 
 class RTD_Analytics(object):
-	def __init__(self, the_rawtape):
+	def __init__(self, the_rawtape,add_code_IN):
 		self.rawtape = the_rawtape
+		self.add_code = add_code_IN
 		self.datatype_dict = dict()
 		self.rtd_res = pd.DataFrame(columns = ['name','datatype','count','unique','mode','mean','std', 'min', '25%','50%','75%','max','sum'])
-		self.data_parser = Data_Parser(self.rawtape)
+		self.data_parser = Data_Parser(self.rawtape,self.add_code)
 
 	def analytics_procedure(self):
 		self.data_parser.parser_procedure()

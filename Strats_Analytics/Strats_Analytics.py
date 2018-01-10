@@ -15,24 +15,29 @@ reload(sys)
 sys.setdefaultencoding( "gb2312" )
 
 class Strats_Analytics(object):
-	def __init__(self, the_rawtape, the_dimensions_settings, the_measures_settings, the_rules_mapping = None, the_target_other_dict = None):
+	def __init__(self, the_rawtape, the_dimensions_settings, the_measures_settings, the_rules_mapping = None, the_target_other_dict = None,add_code_IN = ''):
 		self.rawtape = the_rawtape
 		self.dimensions_settings = the_dimensions_settings
 		self.measures_settings = the_measures_settings
 		self.rules_mapping = the_rules_mapping
 
+
 		self.datatype_dict = dict()
 		# self.rtd_res = pd.DataFrame(columns = ['name','datatype','count','unique','mode','mean','std', 'min', '25%','50%','75%','max','sum'])
-		self.data_parser = Data_Parser(self.rawtape)
+		self.add_code = add_code_IN
+		self.data_parser = Data_Parser(self.rawtape,self.add_code)
+
 		self.run_data_parser()
 
 		self.func_dict = dict()
 		self.target_other_dict = the_target_other_dict
+		
 
 	def run_data_parser(self):
 		self.data_parser.parser_procedure()
 		self.rawtape = self.data_parser.df
 		self.datatype_dict = self.data_parser.datatype_dict
+
 
 	def update_target_other_dict(self, the_target_other_dict):
 		self.target_other_dict = the_target_other_dict

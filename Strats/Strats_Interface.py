@@ -66,21 +66,29 @@ class Strats_settings(Tkinter.Frame):
 		self.text_Display_Top_N = Tkinter.Text(self.line_3_right_frame, height = 1, width = 5)
 		self.text_Display_Top_N.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
 
-
 		self.line_4_frame = Tkinter.Frame(self.frame)
 		self.line_4_frame.pack(side = 'top',expand = 'yes',fill = 'x')
 
-		self.label_Strats_Settings = Tkinter.Label(self.line_4_frame, text = "                                                      分层统计设置记录                                                      ",borderwidth = 2,relief = 'ridge')
-		self.label_Strats_Settings.pack(side = TOP)
+		self.label_add_code = Tkinter.Label(self.line_4_frame, text = "补充代码:",width = 15,anchor = 'w')
+		self.label_add_code.pack(side = "left")
+
+		self.text_add_code = Tkinter.Text(self.line_4_frame, height = 1, width = 15)
+		self.text_add_code.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
 
 		self.line_5_frame = Tkinter.Frame(self.frame)
 		self.line_5_frame.pack(side = 'top',expand = 'yes',fill = 'x')
 
-		self.label_Strats_Idx = Tkinter.Label(self.line_5_frame, text = "分层统计设置序号:")
+		self.label_Strats_Settings = Tkinter.Label(self.line_5_frame, text = "                                                      分层统计设置记录                                                      ",borderwidth = 2,relief = 'ridge')
+		self.label_Strats_Settings.pack(side = TOP)
+
+		self.line_6_frame = Tkinter.Frame(self.frame)
+		self.line_6_frame.pack(side = 'top',expand = 'yes',fill = 'x')
+
+		self.label_Strats_Idx = Tkinter.Label(self.line_6_frame, text = "分层统计设置序号:")
 		self.label_Strats_Idx.pack(side = LEFT)
 
 		self.Static_strVar = Tkinter.StringVar()
-		self.combobox_Strats_Idx = ttk.Combobox(self.line_5_frame, textvariable = self.Static_strVar,width = 10)
+		self.combobox_Strats_Idx = ttk.Combobox(self.line_6_frame, textvariable = self.Static_strVar,width = 10)
 		self.combobox_Strats_Idx.pack(side = RIGHT)
 		self.refresh_strats_records()
 
@@ -92,14 +100,16 @@ class Strats_settings(Tkinter.Frame):
 
 		self.combobox_Strats_Idx.bind("<<ComboboxSelected>>", pop_strat_name)
 
-		self.line_6_frame = Tkinter.Frame(self.frame)
-		self.line_6_frame.pack(side = 'top',expand = 'yes',fill = 'x')
+		self.line_7_frame = Tkinter.Frame(self.frame)
+		self.line_7_frame.pack(side = 'top',expand = 'yes',fill = 'x')
 
-		self.label_Strats_Name = Tkinter.Label(self.line_6_frame, text = "分层统计设置名称:",width = 15,anchor = 'w')
+		self.label_Strats_Name = Tkinter.Label(self.line_7_frame, text = "分层统计设置名称:",width = 15,anchor = 'w')
 		self.label_Strats_Name.pack(side = "left")
 
-		self.text_Strats_Name = Tkinter.Text(self.line_6_frame, height = 1, width = 15)
+		self.text_Strats_Name = Tkinter.Text(self.line_7_frame, height = 1, width = 15)
 		self.text_Strats_Name.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
+
+
 
 
 	def refresh_strats_records(self):

@@ -21,7 +21,8 @@ def analytics_procedure(
 						source_strats_folder_dir,
 						temp_strats_folder_dir,
 						strats_sort_by,
-						strats_display_topn
+						strats_display_topn,
+						add_code
 						):
 
 	load_strats_analytics_instance = False
@@ -48,7 +49,7 @@ def analytics_procedure(
 
 			else:  # without group rule, and total bucket > top N
 				if not load_strats_analytics_instance:
-					Strats_Analytics_instance = Strats_Analytics(rawtape_df,dimensions_settings,measures_settings)
+					Strats_Analytics_instance = Strats_Analytics(rawtape_df,dimensions_settings,measures_settings,add_code_IN = add_code)
 					load_strats_analytics_instance = True
 
 				strats_total_line = res.loc[res.ix[:,0] == 'Total',:]

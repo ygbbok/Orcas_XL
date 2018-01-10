@@ -409,7 +409,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 				live_agg_unlevered_economics_run_aggregation_cf = self.live_agg_unlevered_economics_run_aggregation_cfs[idx]
 
 				unlevered_economics_run_yield = Calc_Utilities.StandardBond_Util.irr_calc(np.array(live_agg_unlevered_economics_run_aggregation_cf['fundings']), 
-					p.array(live_agg_unlevered_economics_run_aggregation_cf['total_cf']), frequency_IN = 12, px = self.static_pool_px)
+					np.array(live_agg_unlevered_economics_run_aggregation_cf['total_cf']), frequency_IN = 12, px = self.static_pool_px)
 
 				live_unlevered_economics_run_analytics_builder = Calc_Utilities.AggAsset_Analytics(bondDF_IN = live_agg_unlevered_economics_run_aggregation_cf,
 					annualyield_IN = unlevered_economics_run_yield, frequency_IN = 12,px_IN = self.static_pool_px)
@@ -804,8 +804,11 @@ class Orcas_Wrapper(Tkinter.Frame):
 		def run_rtd(events = None):
 			temp_rtd_txt = Config.temp_rtd_txt
 			rt_txt = self.strats_gui_mgmt.text_Strats_RT_Dir.get("1.0","end-1c")
+			add_code = self.strats_gui_mgmt.text_add_code.get('0.0','end-1c')
 			df = pd.read_csv(rt_txt, sep = ',')
-			RTD_Analytics_instance = RTD_Analytics(df)
+
+			RTD_Analytics_instance = RTD_Analytics(df,add_code)
+
 			rtd_res = RTD_Analytics_instance.analytics_procedure()
 			self.rtd_res = rtd_res
 			IO_Utilities.IO_Util.output_to_txt(rtd_res, temp_rtd_txt)
@@ -852,6 +855,8 @@ class Orcas_Wrapper(Tkinter.Frame):
 			rawtape_df = pd.read_csv(strats_raw_tape_dir, header = "infer", sep = ',',encoding='gb2312')
 			strats_display_topn = int(self.strats_gui_mgmt.text_Display_Top_N.get('0.0','end-1c'))
 			strats_sort_by = int(self.strats_gui_mgmt.text_Sort_By.get('0.0','end-1c'))
+			add_code = self.strats_gui_mgmt.text_add_code.get('0.0','end-1c')
+
 
 			self.strats_dimension_settings.get_all(dict_type =True)
 			strats_dimension_df = pd.DataFrame(self.strats_dimension_settings.res)
@@ -859,7 +864,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 			strats_dimension_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in zip(Config.dimension_settings_columns_gui,Config.dimension_settings_columns_txt)])
 			strats_dimension_df = strats_dimension_df.rename(columns = strats_dimension_columns)
 			strats_dimension_df = strats_dimension_df[Config.dimension_settings_columns_txt]
-
 
 			self.strats_measures_settings.get_all(dict_type =True)
 			strats_measures_df = pd.DataFrame(self.strats_measures_settings.res)
@@ -883,9 +887,12 @@ class Orcas_Wrapper(Tkinter.Frame):
 			strats_measures_df = pd.read_csv(Config.default_measure_settings_file, header = "infer", sep = '|',encoding='gb2312')
 			mappinggroup_rule_df = pd.read_csv(Config.default_rules_mapping_file, header = "infer", sep = '|',encoding='gb2312')
 
-			Strats_Analytics_instance = Strats_Analytics.Strats_Analytics(rawtape_df,strats_dimension_df,strats_measures_df,mappinggroup_rule_df)
+
+
+			Strats_Analytics_instance = Strats_Analytics.Strats_Analytics(rawtape_df,strats_dimension_df,strats_measures_df,mappinggroup_rule_df,add_code_IN = add_code)
 			Strats_Analytics_instance.run_tape_extension_procedure()
 			strats_res_intermediate = Strats_Analytics_instance.analytics_procedure()
+
 
 
 			if not os.path.exists(temp_strats_folder_dir):		
@@ -904,7 +911,9 @@ class Orcas_Wrapper(Tkinter.Frame):
 												temp_strats_folder_dir,
 												temp_strats_folder_dir,
 												strats_sort_by,
-												strats_display_topn)
+												strats_display_topn,
+												add_code)
+			
 
 			strats_top_fame = Tkinter.Toplevel(width = 900,height = 550)
 			strats_top_fame.title("分层统计" +  " - " + str(self.strats_gui_mgmt.text_Strats_Name.get('0.0','end-1c')))
@@ -1310,8 +1319,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 			
 			dispaly_leveredeconomics_charts_mgmt_instance = GUI_Utilities.Display_LeveredEconomics_Charts_Mgmt_OrcasFormat(self.grand_right_upper_frame,self.Levered_Economics_Mgmt_instance)
 
-
-
 		self.Mgmt_Levered_Economics_Run_treeview = GUI_Utilities.Treeview_Mgmt(master = financingmgmt_line_6, df_IN = self.Mgmt_Levered_Economics_df)
 
 		newFinancingStructure_label = Tkinter.Label(financingmgmt_line_7,text = u"融资结构名称",relief = 'ridge')
@@ -1626,8 +1633,10 @@ class Orcas_Wrapper(Tkinter.Frame):
 		def run_rtd():
 			temp_rtd_txt = Config.temp_rtd_txt
 			rt_txt = self.vintageanalysis_gui_mgmt.text_Vintageanalysis_RT_Dir.get("1.0","end-1c")
+			add_code = self.strats_gui_mgmt.text_add_code.get('0.0','end-1c')
+
 			df = pd.read_csv(rt_txt, sep = ',')
-			RTD_Analytics_instance = RTD_Analytics(df)
+			RTD_Analytics_instance = RTD_Analytics(df,add_code)
 			rtd_res = RTD_Analytics_instance.analytics_procedure()
 			self.rtd_res = rtd_res
 			IO_Utilities.IO_Util.output_to_txt(rtd_res, temp_rtd_txt)
