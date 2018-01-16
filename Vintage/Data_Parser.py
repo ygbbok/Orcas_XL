@@ -19,6 +19,7 @@ class Data_Parser(object):
 
 	def run_add_code(self):
 		for add_code_item in (self.add_code_list):
+			print add_code_item
 			exec(add_code_item)
 
 	def parser_procedure(self):

@@ -10,6 +10,7 @@ sys.setdefaultencoding( "gb2312" )
 
 Orcas_dir = os.path.dirname(__file__)
 sys.path.append(os.path.join(Orcas_dir, 'Strats_Analytics\\'))
+sys.path.append(os.path.join(Orcas_dir, 'Vintage\\'))
 
 
 import pandas as pd
@@ -56,6 +57,8 @@ from RTD_Analytics import RTD_Analytics
 
 # Vintage Analysis related
 from Vintage import Vintage_Interface
+import Vintage_Analytics
+
 reload(sys)
 sys.setdefaultencoding("gb2312")
 
@@ -861,6 +864,7 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.strats_dimension_settings.get_all(dict_type =True)
 			strats_dimension_df = pd.DataFrame(self.strats_dimension_settings.res)
 
+
 			strats_dimension_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in zip(Config.dimension_settings_columns_gui,Config.dimension_settings_columns_txt)])
 			strats_dimension_df = strats_dimension_df.rename(columns = strats_dimension_columns)
 			strats_dimension_df = strats_dimension_df[Config.dimension_settings_columns_txt]
@@ -1475,40 +1479,29 @@ class Orcas_Wrapper(Tkinter.Frame):
 		self.VintageAnalysisPage_Frame = Tkinter.Frame(self.grand_left_frame)
 		self.VintageAnalysisPage_Frame.pack(expand=1, fill="both")
 
-		self.VintageAnalysisPage_Upper_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Frame,width = 600,height = 100,borderwidth = 2)
+		self.VintageAnalysisPage_Upper_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Frame,width = 600,height = 300,borderwidth = 2)
 		self.VintageAnalysisPage_Upper_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
 		self.VintageAnalysisPage_Upper_Frame.pack_propagate(False)
 
-		self.VintageAnalysisPage_Middle_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Frame,width = 600,height = 400,borderwidth = 2)
+		self.VintageAnalysisPage_Middle_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Frame,width = 600,height = 300,borderwidth = 2)
 		self.VintageAnalysisPage_Middle_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
 		self.VintageAnalysisPage_Middle_Frame.pack_propagate(False)
 
 		self.VintageAnalysisPage_Lower_Frame = Tkinter.Frame(self.VintageAnalysisPage_Frame)
 		self.VintageAnalysisPage_Lower_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
 
-		self.VintageAnalysisPage_Middle_1_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_Frame,width = 600,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_Middle_1_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_Frame,width = 600,height = 400,borderwidth = 2)
 		self.VintageAnalysisPage_Middle_1_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
 		self.VintageAnalysisPage_Middle_1_Frame.pack_propagate(False)
 
-		self.VintageAnalysisPage_Middle_2_Frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_Frame,width = 600,height = 200,borderwidth = 2)
-		self.VintageAnalysisPage_Middle_2_Frame.pack(expand=1, fill="both",anchor = 'n',side = 'top')
-		self.VintageAnalysisPage_Middle_2_Frame.pack_propagate(False)
-
-		self.VintageAnalysisPage_221_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_1_Frame,width = 300,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_221_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_1_Frame,width = 300,height = 400,borderwidth = 2)
 		self.VintageAnalysisPage_221_frame.pack(side = 'left',anchor = 'n')
 		self.VintageAnalysisPage_221_frame.pack_propagate(False)
 
-		self.VintageAnalysisPage_222_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_1_Frame,width = 300,height = 200,borderwidth = 2)
+		self.VintageAnalysisPage_222_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_1_Frame,width = 300,height = 400,borderwidth = 2)
 		self.VintageAnalysisPage_222_frame.pack(side = 'left',anchor = 'n')
 		self.VintageAnalysisPage_222_frame.pack_propagate(False)
 
-		self.VintageAnalysisPage_223_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_2_Frame,width = 300,height = 200,borderwidth = 2)
-		self.VintageAnalysisPage_223_frame.pack(side = 'left',anchor = 'n')
-		self.VintageAnalysisPage_223_frame.pack_propagate(False)
-
-		self.VintageAnalysisPage_224_frame = Tkinter.LabelFrame(self.VintageAnalysisPage_Middle_2_Frame,width = 300,height = 200,borderwidth = 2)
-		self.VintageAnalysisPage_224_frame.pack(side = 'left',anchor = 'n')
-		self.VintageAnalysisPage_224_frame.pack_propagate(False)
 
 		self.VintageAnalysisPage_left_line_2_frame = Tkinter.Frame(self.VintageAnalysisPage_Upper_Frame)
 		self.VintageAnalysisPage_left_line_2_frame.pack(side = 'top')
@@ -1557,58 +1550,10 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.VintageAnalysisPage_right_line_2_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_2_canvas.bbox("all"))
 		self.VintageAnalysisPage_right_line_2_new_frame.bind("<Configure>",reconfigure_scrollregion2)
 
-		self.vintageanalysis_measures_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_2_new_frame,
-			title_list_IN=Config.vintage_measures_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加指标',
-			delete_condition_button_text_IN = u'删除指标',style_IN = 'ComboBox')
-
-
-		self.VintageAnalysisPage_right_line_3_frame = Tkinter.Frame(self.VintageAnalysisPage_223_frame)
-		self.VintageAnalysisPage_right_line_3_frame.pack(side = 'top', fill ='both', expand = 'yes')
-		self.VintageAnalysisPage_right_line_3_canvas = Tkinter.Canvas(self.VintageAnalysisPage_right_line_3_frame, width=800, height=500, bg="white")
-		self.VintageAnalysisPage_right_line_3_new_frame = Tkinter.Frame(self.VintageAnalysisPage_right_line_3_canvas)
-
-		ysb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_3_frame,orient='vertical', command= self.VintageAnalysisPage_right_line_3_canvas.yview)
-		self.VintageAnalysisPage_right_line_3_canvas.configure(yscrollcommand=ysb.set)
-		ysb.pack(side = 'right',fill = 'y')
-
-		xsb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_3_frame, orient='horizontal', command= self.VintageAnalysisPage_right_line_3_canvas.xview)
-		self.VintageAnalysisPage_right_line_3_canvas.configure(xscrollcommand=xsb.set)
-		xsb.pack(side = 'bottom',fill = 'x')
-
-		self.VintageAnalysisPage_right_line_3_canvas.pack(side = 'left')
-		self.VintageAnalysisPage_right_line_3_canvas.create_window((0,1), window=self.VintageAnalysisPage_right_line_3_new_frame, anchor="nw")
-
-		def reconfigure_scrollregion3(event):
-			self.VintageAnalysisPage_right_line_3_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_3_canvas.bbox("all"))
-		self.VintageAnalysisPage_right_line_3_new_frame.bind("<Configure>",reconfigure_scrollregion3)
-
-		self.vintageanalysis_conditions_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_3_new_frame,
-			title_list_IN=Config.vintage_condition_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加条件',
-			delete_condition_button_text_IN = u'删除条件',style_IN = 'ComboBox')
-
-		self.VintageAnalysisPage_right_line_4_frame = Tkinter.Frame(self.VintageAnalysisPage_224_frame)
-		self.VintageAnalysisPage_right_line_4_frame.pack(side = 'top', fill ='both', expand = 'yes')
-		self.VintageAnalysisPage_right_line_4_canvas = Tkinter.Canvas(self.VintageAnalysisPage_right_line_4_frame, width=800, height=500, bg="white")
-		self.VintageAnalysisPage_right_line_4_new_frame = Tkinter.Frame(self.VintageAnalysisPage_right_line_4_canvas)
-
-		ysb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_4_frame,orient='vertical', command= self.VintageAnalysisPage_right_line_4_canvas.yview)
-		self.VintageAnalysisPage_right_line_4_canvas.configure(yscrollcommand=ysb.set)
-		ysb.pack(side = 'right',fill = 'y')
-
-		xsb = ttk.Scrollbar(self.VintageAnalysisPage_right_line_4_frame, orient='horizontal', command= self.VintageAnalysisPage_right_line_4_canvas.xview)
-		self.VintageAnalysisPage_right_line_4_canvas.configure(xscrollcommand=xsb.set)
-		xsb.pack(side = 'bottom',fill = 'x')
-
-		self.VintageAnalysisPage_right_line_4_canvas.pack(side = 'left')
-		self.VintageAnalysisPage_right_line_4_canvas.create_window((0,1), window=self.VintageAnalysisPage_right_line_4_new_frame, anchor="nw")
-
-		def reconfigure_scrollregion4(event):
-			self.VintageAnalysisPage_right_line_4_canvas.configure(scrollregion=self.VintageAnalysisPage_right_line_4_canvas.bbox("all"))
-		self.VintageAnalysisPage_right_line_4_new_frame.bind("<Configure>",reconfigure_scrollregion4)
-
-		self.vintageanalysis_grouping_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_4_new_frame,
+		self.vintageanalysis_grouping_settings = GUI_Utilities.ConditionGroup_Mgmt(self.VintageAnalysisPage_right_line_2_new_frame,
 			title_list_IN=Config.vintage_grouping_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加分组',
 			delete_condition_button_text_IN = u'删除分组',style_IN = 'ComboBox')
+
 
 
 		def run_vintage_analysis(events = None):
@@ -1619,44 +1564,83 @@ class Orcas_Wrapper(Tkinter.Frame):
 			vintageanalysis_dimension_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in zip(Config.vintage_dimension_settings_columns_gui,Config.vintage_dimension_settings_columns_txt)])
 			vintageanalysis_dimension_df = vintageanalysis_dimension_df.rename(columns = vintageanalysis_dimension_columns)
 			vintageanalysis_dimension_df = vintageanalysis_dimension_df[Config.vintage_dimension_settings_columns_txt]
+		
+			self.vintageanalysis_grouping_settings.get_all(dict_type =True)
+			vintageanalysis_grouping_df = pd.DataFrame(self.vintageanalysis_grouping_settings.res)
 
-			self.vintageanalysis_measures_settings.get_all(dict_type =True)
-			vintageanalysis_measures_df = pd.DataFrame(self.vintageanalysis_measures_settings.res)
+			vintageanalysis_grouping_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in zip(Config.vintage_grouping_settings_columns_gui,Config.vintage_grouping_settings_columns_txt)])
+			vintageanalysis_grouping_df = vintageanalysis_grouping_df.rename(columns = vintageanalysis_grouping_columns)
+			vintageanalysis_grouping_df = vintageanalysis_grouping_df[Config.vintage_grouping_settings_columns_txt]
 
-			vintageanalysis_measures_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in zip(Config.vintage_measures_settings_columns_gui,Config.vintage_measures_settings_columns_txt)])
-			vintageanalysis_measures_df = vintageanalysis_measures_df.rename(columns = vintageanalysis_measures_columns)
-			vintageanalysis_measures_df = vintageanalysis_measures_df[Config.vintage_measures_settings_columns_txt]
+			vintageanalysis_repayment_dir = self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Repayment_Dir.get('0.0','end-1c')
+			vintageanalysis_repayment_df = pd.read_csv(vintageanalysis_repayment_dir, header = "infer", sep = ',',encoding='gb2312')
 
-			print "One Quarter is done; rest to be developed"
+			vintageanalysis_loantape_dir = self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Loantape_Dir.get('0.0','end-1c')
+			vintageanalysis_loantape_df = pd.read_csv(vintageanalysis_loantape_dir, header = "infer", sep = ',',encoding='gb2312')
+
+			vintage_analysis_code = self.vintageanalysis_gui_mgmt.text_add_code.get('0.0','end-1c')
+			
+			measures_dict = {
+							'repayment_loan_identity': self.vintageanalysis_gui_mgmt.combobox_repayment_Loan_Identity.get(),
+							'loantape_loan_identity': self.vintageanalysis_gui_mgmt.combobox_loantape_Loan_Identity.get(),
+							'time_schedule': self.vintageanalysis_gui_mgmt.combobox_Timeschedule.get(),
+							'orig_bal': self.vintageanalysis_gui_mgmt.combobox_Orig_Bal.get(),
+							'bop_bal': self.vintageanalysis_gui_mgmt.combobox_BOP_Bal.get(),
+							'prepay': self.vintageanalysis_gui_mgmt.combobox_Prepay_Bal.get(),
+							'sche_bal': self.vintageanalysis_gui_mgmt.combobox_Sche_Bal.get(),
+							'default_bal':self.vintageanalysis_gui_mgmt.combobox_Default_Bal.get()
+							}
+
+			self.Vintage_Analytics_instance = Vintage_Analytics.Vintage_Analytics(
+																vintageanalysis_repayment_df,
+																vintageanalysis_loantape_df,
+																vintageanalysis_dimension_df,
+																measures_dict,
+																vintageanalysis_grouping_df,
+																vintage_analysis_code
+																)
+			
+			self.Vintage_Analytics_instance.analytics_procedure()
+
+
 
 
 		def run_rtd():
-			temp_rtd_txt = Config.temp_rtd_txt
-			rt_txt = self.vintageanalysis_gui_mgmt.text_Vintageanalysis_RT_Dir.get("1.0","end-1c")
-			add_code = self.strats_gui_mgmt.text_add_code.get('0.0','end-1c')
-
-			df = pd.read_csv(rt_txt, sep = ',')
+			repayment_rt_txt = self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Repayment_Dir.get("1.0","end-1c")
+			add_code = ''
+			df = pd.read_csv(repayment_rt_txt, sep = ',')
 			RTD_Analytics_instance = RTD_Analytics(df,add_code)
-			rtd_res = RTD_Analytics_instance.analytics_procedure()
-			self.rtd_res = rtd_res
-			IO_Utilities.IO_Util.output_to_txt(rtd_res, temp_rtd_txt)
+			repayment_rtd_res = RTD_Analytics_instance.analytics_procedure()
+			self.repayment_rtd_res = repayment_rtd_res
+
+			loantape_rt_txt = self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Loantape_Dir.get("1.0","end-1c")
+			add_code = ''
+			df = pd.read_csv(loantape_rt_txt, sep = ',')
+			RTD_Analytics_instance = RTD_Analytics(df,add_code)
+			loantape_rtd_res = RTD_Analytics_instance.analytics_procedure()
+			self.loantape_rtd_res = loantape_rtd_res
+
+
 
 		def vintageanalysis_columns_dropdown_setup():
 			run_rtd()
 
-			column_dropdown_list = [unicode(item) for item in list(self.rtd_res['name'].values)]
+			repayment_column_dropdown_list = [unicode(item) for item in list(self.repayment_rtd_res['name'].values)]
+			loantape_column_dropdown_list = [unicode(item) for item in list(self.loantape_rtd_res['name'].values)]
 
-			self.vintageanalysis_gui_mgmt.combobox_Loan_Identity['values'] = column_dropdown_list
-			self.vintageanalysis_gui_mgmt.combobox_Timeschedule['values'] = column_dropdown_list
+			self.vintageanalysis_gui_mgmt.combobox_repayment_Loan_Identity['values'] = repayment_column_dropdown_list
+			self.vintageanalysis_gui_mgmt.combobox_loantape_Loan_Identity['values'] = loantape_column_dropdown_list
+			self.vintageanalysis_gui_mgmt.combobox_Timeschedule['values'] = repayment_column_dropdown_list
+			self.vintageanalysis_gui_mgmt.combobox_Orig_Bal['values'] = repayment_column_dropdown_list
+			self.vintageanalysis_gui_mgmt.combobox_BOP_Bal['values'] = repayment_column_dropdown_list
+			self.vintageanalysis_gui_mgmt.combobox_Sche_Bal['values'] = repayment_column_dropdown_list
+			self.vintageanalysis_gui_mgmt.combobox_Default_Bal['values'] = repayment_column_dropdown_list
+			self.vintageanalysis_gui_mgmt.combobox_Prepay_Bal['values'] = repayment_column_dropdown_list
 
-			dimesion_dropdown_list = [column_dropdown_list,[],[]]
-			measure_dropdownlist = [column_dropdown_list,[],column_dropdown_list,[]]
-			conditions_dropdown_list = [Config.conditions_logical_list,column_dropdown_list,Config.conditions_operation_list,[],Config.conditions_datatype_list]
+			dimesion_dropdown_list = [loantape_column_dropdown_list,[],[]]
 			grouping_dropdown_list = [[],[],[],[]]
 
 			self.vintageanalysis_dimension_settings.reload_combo_box_values_list(dimesion_dropdown_list)
-			self.vintageanalysis_measures_settings.reload_combo_box_values_list(measure_dropdownlist)
-			self.vintageanalysis_conditions_settings.reload_combo_box_values_list(conditions_dropdown_list)
 			self.vintageanalysis_grouping_settings.reload_combo_box_values_list(grouping_dropdown_list)
 
 		self.vintageanalysispage_run_vintage_button = Tkinter.Button(self.VintageAnalysisPage_Lower_Frame,text = u"批次分析", command = run_vintage_analysis,bg = Config.Orcas_blue)
