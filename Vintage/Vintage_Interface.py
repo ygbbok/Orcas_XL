@@ -170,11 +170,11 @@ class Vintage_settings(Tkinter.Frame):
 		self.Static_strVar = Tkinter.StringVar()
 		self.combobox_Vintageanalysis_Idx = ttk.Combobox(self.line_10_frame, textvariable = self.Static_strVar,width = 10)
 		self.combobox_Vintageanalysis_Idx.pack(side = RIGHT)
-		# self.refresh_Vintageanalysis_records()
+		self.refresh_Vintageanalysis_records()
 
 		def pop_strat_name(events):
 			strat_idx_selected = self.combobox_Vintageanalysis_Idx.get()
-			strat_name = self.strat_idx_records[self.strat_idx_records['Vintageanalysis_Idx'].astype(str) == str(strat_idx_selected)]['Vintageanalysis_Name'].values[0]
+			strat_name = self.vintage_analysis_idx_records[self.vintage_analysis_idx_records['vintage_analysis_num'].astype(str) == str(strat_idx_selected)]['vintage_analysis_name'].values[0]
 			self.text_Vintageanalysis_Name.delete("1.0",END)
 			self.text_Vintageanalysis_Name.insert(END,strat_name)
 
@@ -187,19 +187,25 @@ class Vintage_settings(Tkinter.Frame):
 		self.label_Vintageanalysis_Name.pack(side = "left")
 
 		self.text_Vintageanalysis_Name = Tkinter.Text(self.line_11_frame, height = 1, width = 10)
+		# self.text_Vintageanalysis_Name = Tkinter.Entry(self.line_11_frame, width = 10)
 		self.text_Vintageanalysis_Name.pack(side = 'left',anchor = 'w',expand = 'yes',fill = 'x')
 
 
 	def refresh_Vintageanalysis_records(self):
-		sql_query = "SELECT [Vintageanalysis_Idx],[Vintageanalysis_Name] FROM [Orcas_Operation].[dbo].[Vintageanalysis_Idx_Name]"
-		res_list = IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 1,database = Config.orcas_operation_db)
-		self.strat_idx_records = res_list[0]
+		# sql_query = "SELECT [Vintageanalysis_Idx],[Vintageanalysis_Name] FROM [Orcas_Operation].[dbo].[Vintageanalysis_Idx_Name]"
+		# res_list = IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 1,database = Config.orcas_operation_db)
+		# self.strat_idx_records = res_list[0]
 
-		Vintageanalysis_idx =  self.strat_idx_records['Vintageanalysis_Idx'].values
-		Vintageanalysis_name =  [unicode(item) for item in list(self.strat_idx_records['Vintageanalysis_Name'].values)]
+		if os.stat(Config.vintage_analysis_group_list).st_size != 0:
+			self.vintage_analysis_idx_records = pd.DataFrame()
+			self.vintage_analysis_idx_records = pd.read_pickle(Config.vintage_analysis_group_list)
+			Vintageanalysis_idx =  self.vintage_analysis_idx_records['vintage_analysis_num'].values
+			Vintageanalysis_name =  [unicode(item) for item in list(self.vintage_analysis_idx_records['vintage_analysis_name'].values)]
 
-		strVar = ''
-		for i in range(0, Vintageanalysis_idx.size):
-			strVar = strVar + str(Vintageanalysis_idx[i]) + ' '
+			strVar = ''
+			for i in range(0, Vintageanalysis_idx.size):
+				strVar = strVar + str(Vintageanalysis_idx[i]) + ' '
 
-		self.combobox_Vintageanalysis_Idx['values'] = strVar
+			self.combobox_Vintageanalysis_Idx['values'] = strVar
+
+		

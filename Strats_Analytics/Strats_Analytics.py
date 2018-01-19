@@ -53,11 +53,9 @@ class Strats_Analytics(object):
 		# 	print value
 
 
-
 		for index, row in self.dimensions_settings.iterrows():
 			effective_sl = row['strats_label_effective']
 			col = row['column']
-
 
 			datatype = self.datatype_dict[unicode(col)]
 
@@ -68,6 +66,7 @@ class Strats_Analytics(object):
 				length = len(rule_mapping)
 
 				raw_bins = [rule_mapping.loc[rule_mapping.index[0],u'Lower_Bound']] + (list(rule_mapping.loc[:,'Upper_Bound']))
+				print raw_bins
 
 				if datatype in ["float","int"]:
 					effective_bins = [float(item) for item in raw_bins]
