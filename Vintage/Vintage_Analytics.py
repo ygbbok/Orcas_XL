@@ -29,11 +29,12 @@ class Vintage_Analytics(object):
 		self.add_code = add_code_IN
 		self.data_parser = Data_Parser(self.loantape,self.add_code)
 
+
 		self.run_data_parser()
 
 	def run_data_parser(self):
 		self.data_parser.parser_procedure()
-		self.rawtape = self.data_parser.df
+		self.loantape = self.data_parser.df
 		self.datatype_dict = self.data_parser.datatype_dict
 
 	def run_add_code(self):
@@ -56,13 +57,13 @@ class Vintage_Analytics(object):
 		repayment_columns = list(self.repayment.columns.values)
 		dimension_columns = list(self.dimensions_settings.loc[:,'column'])
 
-		def run_exec(code_piece):
-			exec(code_piece)
+		# def run_exec(code_piece):
+		# 	exec(code_piece)
 
 		# Loan Tape Condition Partition
-		if self.add_code != '':
-			self.add_code_list = self.add_code.split('\n')
-			self.run_add_code()
+		# if self.add_code != '':
+		# 	self.add_code_list = self.add_code.split('\n')
+		# 	self.run_add_code()
 
 
 		# Find Inner Join of Loan Tape and Repayment
@@ -130,7 +131,7 @@ class Vintage_Analytics(object):
 				smm_vector = prepay_vector / (bop_bal_vector-sche_bal_vector)
 				cpr_vector = 1 - smm_vector.apply(lambda x: math.pow(1 - x,12))
 			
-				print prepay_accum_rate.to_string(index = False)
+				# print prepay_accum_rate.to_string(index = False)
 				prepay_accum_rate.to_csv(temp_output_str, index = False)
 			else:
 				orig_bal = self.repayment.groupby([dimension,'MOB'])[self.measures_dict['orig_bal']].sum().reset_index()
@@ -149,7 +150,7 @@ class Vintage_Analytics(object):
 				smm_vector = prepay_vector / (bop_bal_vector-sche_bal_vector)
 				cpr_vector = 1 - smm_vector.apply(lambda x: math.pow(1 - x,12))
 			
-				print prepay_accum_rate
+				# print prepay_accum_rate
 				prepay_accum_rate.to_csv(temp_output_str)
 
 			

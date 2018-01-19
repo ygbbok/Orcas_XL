@@ -1557,7 +1557,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 		# self.vintageanalysis_group_rule_save_button.pack(side = 'left', anchor = 'w')
 
 
-
 		def run_vintage_analysis(events = None):
 
 			self.vintageanalysis_dimension_settings.get_all(dict_type =True)
