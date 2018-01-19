@@ -115,10 +115,11 @@ struct_info_pkl = os.path.join(Orcas_dir, 'Struct_Specifics\\', '1.Struct_Info',
 # ********************** Strats **********************
 
 # ********************** Vintage **********************
+vintage_analysis_group_list = os.path.join(Orcas_dir, 'Vintage\Vintage_Analysis_group_list.pickle')
 vintage_dimension_settings_columns_gui = [u'字段',u'组合规则',u'标签']
 vintage_dimension_settings_columns_txt = [u'column',u'group_rule',u'label']
 
 vintage_grouping_settings_columns_gui = [u'编号',u'左边界',u'右边界',u'标签']
-vintage_grouping_settings_columns_txt= [u'index',u'lower_bound',u'upper_bound',u'label']
+vintage_grouping_settings_columns_txt= [u'Rule_Idx',u'Lower_Bound',u'Upper_Bound','Label']
 
 # ********************** Vintage **********************

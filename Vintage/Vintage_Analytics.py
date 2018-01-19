@@ -85,6 +85,8 @@ class Vintage_Analytics(object):
 
 			print prepay_accum_rate
 
+			# prepay_accum_rate.to_csv(os.path.join(Config.Orcas_dir, 'temp_output\prepay_accum_rate2.csv'))
+
 def main():
 	the_repayment = pd.read_csv(u"F:\Work\Bohai Huijin Asset Management\Investment\ABS Investment\Opportunities\优信二手车\尽调\资产数据\\uxin_repayment.csv",sep = ",",encoding='gb2312')
 	the_loantape = pd.read_csv(u"F:\Work\Bohai Huijin Asset Management\Investment\ABS Investment\Opportunities\优信二手车\尽调\资产数据\\uxin_loantape.csv",sep = ",",encoding='gb2312')

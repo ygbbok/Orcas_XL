@@ -323,7 +323,6 @@ class Orcas_Wrapper(Tkinter.Frame):
 		output = open(Config.Unlevered_Economics_Run_Folder + str(new_unlevered_economics_run_num) + '.ll.pkl', 'wb')
 		pickle.dump(cashflow_engine_instance.cashflow, output)
 		output.close()
-		
 
 		self.Mgmt_Unlevered_Economics_df.loc[max(self.Mgmt_Unlevered_Economics_df.index)+1] = [new_unlevered_economics_run_num,self.newUnleveredEconomics_entry.get(),'chinatopcredit_cashloan_5m10m','cashloan_ctc_mode',static_pool_selected,orcas_user,datetime.now()]
 		self.Mgmt_Unlevered_Economics_df.to_pickle(Config.Mgmt_Unlevered_Economics_Run_File)
@@ -891,13 +890,9 @@ class Orcas_Wrapper(Tkinter.Frame):
 			strats_measures_df = pd.read_csv(Config.default_measure_settings_file, header = "infer", sep = '|',encoding='gb2312')
 			mappinggroup_rule_df = pd.read_csv(Config.default_rules_mapping_file, header = "infer", sep = '|',encoding='gb2312')
 
-
-
 			Strats_Analytics_instance = Strats_Analytics.Strats_Analytics(rawtape_df,strats_dimension_df,strats_measures_df,mappinggroup_rule_df,add_code_IN = add_code)
 			Strats_Analytics_instance.run_tape_extension_procedure()
 			strats_res_intermediate = Strats_Analytics_instance.analytics_procedure()
-
-
 
 			if not os.path.exists(temp_strats_folder_dir):		
 				os.makedirs(temp_strats_folder_dir)
@@ -1568,6 +1563,9 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.vintageanalysis_grouping_settings.get_all(dict_type =True)
 			vintageanalysis_grouping_df = pd.DataFrame(self.vintageanalysis_grouping_settings.res)
 
+			sql_query = "SELECT * FROM [Orcas_Operation].[dbo].[Strats_GroupRule_Mapping]"
+			vintageanalysis_grouping_df = IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 1,database = Config.orcas_operation_db)[0]
+
 			vintageanalysis_grouping_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in zip(Config.vintage_grouping_settings_columns_gui,Config.vintage_grouping_settings_columns_txt)])
 			vintageanalysis_grouping_df = vintageanalysis_grouping_df.rename(columns = vintageanalysis_grouping_columns)
 			vintageanalysis_grouping_df = vintageanalysis_grouping_df[Config.vintage_grouping_settings_columns_txt]
@@ -1637,11 +1635,15 @@ class Orcas_Wrapper(Tkinter.Frame):
 			self.vintageanalysis_gui_mgmt.combobox_Default_Bal['values'] = repayment_column_dropdown_list
 			self.vintageanalysis_gui_mgmt.combobox_Prepay_Bal['values'] = repayment_column_dropdown_list
 
-			dimesion_dropdown_list = [loantape_column_dropdown_list,[],[]]
-			grouping_dropdown_list = [[],[],[],[]]
-
+			
+			sql_query = "SELECT distinct([Rule_Idx]) FROM [Orcas_Operation].[dbo].[Strats_GroupRule_Mapping]"
+			res_list = IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 1,database = Config.orcas_operation_db)
+			grouping_dropdown_list =  [unicode(item) for item in res_list[0]['Rule_Idx'].values]
+			dimesion_dropdown_list = [loantape_column_dropdown_list,grouping_dropdown_list,[]]
+			# grouping_dropdown_list = [[],[],[],[]]
+			
 			self.vintageanalysis_dimension_settings.reload_combo_box_values_list(dimesion_dropdown_list)
-			self.vintageanalysis_grouping_settings.reload_combo_box_values_list(grouping_dropdown_list)
+			# self.vintageanalysis_grouping_settings.reload_combo_box_values_list(grouping_dropdown_list)
 
 		self.vintageanalysispage_run_vintage_button = Tkinter.Button(self.VintageAnalysisPage_Lower_Frame,text = u"批次分析", command = run_vintage_analysis,bg = Config.Orcas_blue)
 		self.vintageanalysispage_run_vintage_button.pack(side = 'left',anchor = 'w')
@@ -1649,6 +1651,140 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 		self.vintageanalysispage_dropdown_setup_button = Tkinter.Button(self.VintageAnalysisPage_Lower_Frame,text = u"参数预设", command = vintageanalysis_columns_dropdown_setup,bg = Config.Orcas_blue)
 		self.vintageanalysispage_dropdown_setup_button.pack(side = 'left',anchor = 'w')
+
+		def saveVintageAnalysisSettings(events = None):
+			VintageAnalysisSettings = dict()
+			VintageAnalysisSettings['repayment_dir'] = self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Repayment_Dir.get('0.0','end-1c')
+			VintageAnalysisSettings['loantape_dir'] = self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Loantape_Dir.get('0.0','end-1c')
+			VintageAnalysisSettings['repayment_loan_identity'] = self.vintageanalysis_gui_mgmt.combobox_repayment_Loan_Identity.get()
+			VintageAnalysisSettings['loantape_loan_identity'] =  self.vintageanalysis_gui_mgmt.combobox_loantape_Loan_Identity.get()
+			VintageAnalysisSettings['time_schedule'] = self.vintageanalysis_gui_mgmt.combobox_Timeschedule.get()
+			VintageAnalysisSettings['orig_bal'] = self.vintageanalysis_gui_mgmt.combobox_Orig_Bal.get()
+			VintageAnalysisSettings['bop_bal'] = self.vintageanalysis_gui_mgmt.combobox_BOP_Bal.get()
+			VintageAnalysisSettings['prepay'] = self.vintageanalysis_gui_mgmt.combobox_Prepay_Bal.get()
+			VintageAnalysisSettings['sche_bal'] = self.vintageanalysis_gui_mgmt.combobox_Sche_Bal.get()
+			VintageAnalysisSettings['default_bal'] = self.vintageanalysis_gui_mgmt.combobox_Default_Bal.get()
+			VintageAnalysisSettings['add_code'] = self.vintageanalysis_gui_mgmt.text_add_code.get('0.0','end-1c')
+
+			# loantape_column_dropdown_list = [unicode(item) for item in list(self.loantape_rtd_res['name'].values)]
+			# self.vintageanalysis_gui_mgmt.combobox_repayment_Loan_Identity['values'] = repayment_column_dropdown_list
+
+			new_vintage_analysis_struct_name = self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Name.get('0.0','end-1c')
+
+			self.vintage_analysis_struct_df = pd.read_pickle(Config.vintage_analysis_group_list)
+			if self.vintage_analysis_struct_df.empty:
+				new_vintage_analysis_struct_num = 1
+				self.vintage_analysis_struct_df.loc[0] = [new_vintage_analysis_struct_num,new_vintage_analysis_struct_name,orcas_user,datetime.now()]
+			else:
+				new_vintage_analysis_struct_num = max(self.vintage_analysis_struct_df['vintage_analysis_num']) + 1
+				self.vintage_analysis_struct_df.loc[max(self.vintage_analysis_struct_df.index)+1] = [new_vintage_analysis_struct_num,new_vintage_analysis_struct_name,orcas_user,datetime.now()]
+
+			output = open(Config.Orcas_dir + '\Vintage\\' + str(new_vintage_analysis_struct_num) + '-VintageAnalysisSettings.pkl', 'wb')
+			pickle.dump(VintageAnalysisSettings, output)
+			output.close()
+
+			self.vintage_analysis_struct_df.to_pickle(Config.vintage_analysis_group_list)
+			self.vintageanalysis_gui_mgmt.refresh_Vintageanalysis_records()
+
+			# Save mapping_rule
+			self.vintageanalysis_dimension_settings.get_all(dict_type =True)
+			vintageanalysis_grouping_df = pd.DataFrame(self.vintageanalysis_dimension_settings.res)
+			mapping_rule_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in
+				zip(Config.vintage_dimension_settings_columns_gui,Config.vintage_dimension_settings_columns_txt)])
+			vintageanalysis_grouping_df = vintageanalysis_grouping_df.rename(columns = mapping_rule_columns)
+			vintageanalysis_grouping_df = vintageanalysis_grouping_df[Config.vintage_dimension_settings_columns_txt]
+			vintageanalysis_grouping_dict = vintageanalysis_grouping_df.to_dict()
+
+			output = open(Config.Orcas_dir + '\Vintage\\' + str(new_vintage_analysis_struct_num) + '-VintageAnalysisGroupingSettings.pkl', 'wb')
+			pickle.dump(vintageanalysis_grouping_dict, output)
+			output.close()
+			
+		self.vintageanalysispage_save_vintage_settings_button = Tkinter.Button(self.VintageAnalysisPage_Lower_Frame,text = u"保存设置", command = saveVintageAnalysisSettings,
+			bg = Config.Orcas_blue)
+		self.vintageanalysispage_save_vintage_settings_button.pack(side = 'left',anchor = 'w')
+
+		def loadVintageAnalysisSettings(events = None):
+			vintage_analysis_struct_num = self.vintageanalysis_gui_mgmt.combobox_Vintageanalysis_Idx.get()
+
+			to_be_loaded_VintageAnalysisSettings  = Config.Orcas_dir + '\Vintage\\' + str(vintage_analysis_struct_num) + '-VintageAnalysisSettings.pkl'
+
+			VintageAnalysisSettings_pkl_file = open(to_be_loaded_VintageAnalysisSettings, 'rb')
+			VintageAnalysisSettings = pickle.load(VintageAnalysisSettings_pkl_file)
+			VintageAnalysisSettings_pkl_file.close()
+
+			self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Repayment_Dir.delete('0.0','end')
+			self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Repayment_Dir.insert('end',VintageAnalysisSettings['repayment_dir'])
+
+			self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Loantape_Dir.delete('0.0','end')
+			self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Loantape_Dir.insert('end',VintageAnalysisSettings['loantape_dir'])
+
+			self.vintageanalysis_gui_mgmt.combobox_repayment_Loan_Identity.delete(0,'end')
+			self.vintageanalysis_gui_mgmt.combobox_repayment_Loan_Identity.insert('end',VintageAnalysisSettings['repayment_loan_identity'])
+
+			self.vintageanalysis_gui_mgmt.combobox_loantape_Loan_Identity.delete(0,'end')
+			self.vintageanalysis_gui_mgmt.combobox_loantape_Loan_Identity.insert('end',VintageAnalysisSettings['loantape_loan_identity'])
+
+			self.vintageanalysis_gui_mgmt.combobox_Timeschedule.delete(0,'end')
+			self.vintageanalysis_gui_mgmt.combobox_Timeschedule.insert('end',VintageAnalysisSettings['time_schedule'])
+
+			self.vintageanalysis_gui_mgmt.combobox_Orig_Bal.delete(0,'end')
+			self.vintageanalysis_gui_mgmt.combobox_Orig_Bal.insert('end',VintageAnalysisSettings['orig_bal'])
+
+			self.vintageanalysis_gui_mgmt.combobox_BOP_Bal.delete(0,'end')
+			self.vintageanalysis_gui_mgmt.combobox_BOP_Bal.insert('end',VintageAnalysisSettings['bop_bal'])
+
+			self.vintageanalysis_gui_mgmt.combobox_Prepay_Bal.delete(0,'end')
+			self.vintageanalysis_gui_mgmt.combobox_Prepay_Bal.insert('end',VintageAnalysisSettings['prepay'])
+
+			self.vintageanalysis_gui_mgmt.combobox_Sche_Bal.delete(0,'end')
+			self.vintageanalysis_gui_mgmt.combobox_Sche_Bal.insert('end',VintageAnalysisSettings['sche_bal'])
+
+			self.vintageanalysis_gui_mgmt.combobox_Default_Bal.delete(0,'end')
+			self.vintageanalysis_gui_mgmt.combobox_Default_Bal.insert('end',VintageAnalysisSettings['default_bal'])
+
+			self.vintageanalysis_gui_mgmt.text_add_code.delete('0.0','end')
+			self.vintageanalysis_gui_mgmt.text_add_code.insert('end',VintageAnalysisSettings['add_code'])
+
+			# load grouping settings
+			to_be_loaded_VintageAnalysisGroupingSettings  = Config.Orcas_dir + '\Vintage\\' + str(vintage_analysis_struct_num) + '-VintageAnalysisGroupingSettings.pkl'
+
+			vintageanalysis_grouping_pkl_file = open(to_be_loaded_VintageAnalysisGroupingSettings, 'rb')
+			vintageanalysis_grouping = pickle.load(vintageanalysis_grouping_pkl_file)
+			vintageanalysis_grouping_pkl_file.close()
+
+			vintageanalysis_grouping_df = pd.DataFrame.from_dict(vintageanalysis_grouping)
+			self.vintageanalysis_dimension_settings.load_settings(vintageanalysis_grouping_df)
+
+		self.vintageanalysispage_load_vintage_settings_button = Tkinter.Button(self.VintageAnalysisPage_Lower_Frame,text = u"载入设置", command = loadVintageAnalysisSettings,
+			bg = Config.Orcas_blue)
+		self.vintageanalysispage_load_vintage_settings_button.pack(side = 'left',anchor = 'w')
+
+		def deleteVintageAnalysisSettings():
+			vintage_analysis_struct_num = self.vintageanalysis_gui_mgmt.combobox_Vintageanalysis_Idx.get()
+			to_be_removed_VintageAnalysisSettings  = Config.Orcas_dir + '\Vintage\\' + str(vintage_analysis_struct_num) + '-VintageAnalysisSettings.pkl'		
+			try:
+				os.remove(to_be_removed_VintageAnalysisSettings)
+			except:
+				pass
+
+			to_be_removed_VintageAnalysisGroupingSettings  = Config.Orcas_dir + '\Vintage\\' + str(vintage_analysis_struct_num) + '-VintageAnalysisGroupingSettings.pkl'
+			try:
+				os.remove(to_be_removed_VintageAnalysisGroupingSettings)
+			except:
+				pass
+
+			self.vintage_analysis_struct_df = pd.read_pickle(Config.vintage_analysis_group_list)
+			self.vintage_analysis_struct_df = self.vintage_analysis_struct_df[self.vintage_analysis_struct_df['vintage_analysis_num']!=int(vintage_analysis_struct_num)]
+			self.vintage_analysis_struct_df.to_pickle(Config.vintage_analysis_group_list)
+			self.vintageanalysis_gui_mgmt.refresh_Vintageanalysis_records()
+
+		# self.deleteUnleveredEconomics_Button = Tkinter.Button(unleveredeconomics_line_6, text = u"删除资产池分析实例", command = deleteUnleveredEconomics)
+		# self.deleteUnleveredEconomics_Button.pack(side = 'left',expand = 'yes',fill = 'x')
+		self.vintageanalysispage_delete_vintage_settings_button = Tkinter.Button(self.VintageAnalysisPage_Lower_Frame,text = u"删除设置", command = deleteVintageAnalysisSettings,
+			bg = Config.Orcas_blue)
+		self.vintageanalysispage_delete_vintage_settings_button.pack(side = 'left',anchor = 'w')
+
+
 
 def main():
 	root = Tkinter.Tk()
