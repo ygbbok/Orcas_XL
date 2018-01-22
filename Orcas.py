@@ -1600,6 +1600,43 @@ class Orcas_Wrapper(Tkinter.Frame):
 			
 			self.Vintage_Analytics_instance.analytics_procedure()
 
+			self.grand_right_upper_frame.destroy()
+			self.grand_right_lower_frame.destroy()
+
+			self.grand_right_upper_frame = Tkinter.Frame(self.grand_right_frame,width=600, height=200)
+			# self.grand_right_lower_frame = Tkinter.Frame(self.grand_right_frame,width=600, height=100)
+
+			# to be developed #
+			self.grand_right_upper_frame.pack(side = 'top')
+			# self.grand_right_lower_frame.pack(side = 'top')
+
+			self.vintageanalysis_notebook_prepayment_default = ttk.Notebook(self.grand_right_upper_frame)
+			# self.vintageanalysis_notebook_default = ttk.Notebook(self.grand_right_lower_frame)
+
+			self.vintageanalysis_notebook_prepayment_default.pack()
+			# self.vintageanalysis_notebook_default.pack()
+
+			dimension_list = list(vintageanalysis_dimension_df['column'].values)
+
+			for dimension in dimension_list:
+				if events is not None:
+					IO_Utilities.IO_Util.open_in_html(self.Vintage_Analytics_instance.accum_prepayment_curves[dimension])
+
+				new_frame = Tkinter.Frame(self.grand_right_upper_frame,width = 600,height = 600)
+				new_frame.pack()
+				new_frame.pack_propagate(False)
+
+				# new_lower_frame = Tkinter.Frame(self.grand_right_lower_frame,width = 600,height = 300)
+				# new_lower_frame.pack()
+				# new_lower_frame.pack_propagate(False)
+
+
+				prepay_data_dict = {"Accum_Prepayment":self.Vintage_Analytics_instance.accum_prepayment_curves[dimension]}
+				
+				dispaly_prepay_charts_mgmt_instance = GUI_Utilities.Display_Prepay_Default_Charts_Mgmt_OrcasFormat(new_frame,prepay_data_dict)
+
+				self.vintageanalysis_notebook_prepayment_default.add(new_frame,text = dimension)
+				# self.vintageanalysis_notebook_default.add(new_lower_frame,text = dimension)
 
 
 

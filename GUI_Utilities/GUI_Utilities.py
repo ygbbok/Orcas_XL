@@ -393,6 +393,61 @@ class Display_Unlevered_Econ_Cashflow_Mgmt(Tkinter.Frame):
 			if self.open_in_html_bool:
 				IO_Utilities.IO_Util.open_in_html(self.cashflow_df_list[idx])
 
+class Display_Prepay_Default_Charts_Mgmt_OrcasFormat(Tkinter.Frame):
+	def __init__(self,master,prepay_default_data_dict_IN):
+		Tkinter.Frame.__init__(self, master)
+		self.pack()
+
+		self.frame = Tkinter.Frame(self)
+		self.frame.pack(side = 'top')
+
+		self.prepay_default_data_dict = prepay_default_data_dict_IN
+		self.data_setup()
+		self.widget_setup()
+
+	def data_setup(self):
+		pass
+
+	def widget_setup(self):
+		fig = Figure(figsize = (7,7))
+		rect = fig.patch
+		rect.set_facecolor(Config.Orcas_grey)
+
+		ax1 = fig.add_subplot(221)
+		ax2 = fig.add_subplot(222)
+		ax3 = fig.add_subplot(223)
+		ax4 = fig.add_subplot(224)
+
+		prepay_data_df = self.prepay_default_data_dict['Accum_Prepayment']
+
+		accum_prepay_x = np.array(list(prepay_data_df.index))
+		plot_slots = []
+
+		for col in prepay_data_df.columns:
+			# if len(smm_curve_x) > len(np.transpose(smm_curve_y_item)):
+			# 	smm_curve_y_item_ploted = np.transpose(smm_curve_y_item) * 100
+			# 	smm_curve_y_item_ploted = np.concatenate([smm_curve_y_item_ploted,np.array([np.nan] * (len(smm_curve_x) - len(np.transpose(smm_curve_y_item))))])
+			# else:
+			# 	smm_curve_y_item_ploted = np.transpose(smm_curve_y_item) * 100
+
+			plt = ax1.plot(accum_prepay_x,np.array(prepay_data_df[col]) * 100,label = col)
+			ax1.grid(b=True, which='both', color='0.65',linestyle='-.')
+			plot_slots.append([plt,col])
+
+
+		# ax1.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower right', ncol=2, mode="expand", borderaxespad=0.)
+
+		# fig.legend(tuple([item[0] for item in plot_slots]), tuple([item[1] for item in plot_slots]), 'upper left')
+
+
+		fig.legend(([item[0][0] for item in plot_slots]), ([item[1] for item in plot_slots]), 'upper center',borderaxespad=6,ncol = 2,bbox_to_anchor=(0., 1.02, 1., .102))
+
+		# ax1.legend(loc='lower right', ncol=2, mode="expand", borderaxespad=0.)
+		self.canvas = FigureCanvasTkAgg(fig,master=self.frame)
+		self.canvas.show()
+		self.canvas.get_tk_widget().pack(side='top', fill='both', expand=1)
+
+
 
 class Display_LeveredEconomics_Charts_Mgmt_OrcasFormat(Tkinter.Frame):
 	def __init__(self, master, financing_mgmt_instance_IN):
