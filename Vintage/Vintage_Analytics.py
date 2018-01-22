@@ -157,7 +157,7 @@ def main():
 
 	the_measures_dict = {
 						'repayment_loan_identity':u'loan_number',
-						'loantape_loan_identity':u'付一半订单编号',
+						'loantape_loan_identity':u'付一半订单编�,
 						'time_schedule':u'sche_date',
 						'orig_bal':u'original_balance',
 						'bop_bal':u'bop_balance',

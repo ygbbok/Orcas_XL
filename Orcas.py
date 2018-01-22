@@ -20,6 +20,7 @@ import ttk as ttk
 from Struct_Model import Struct_CF_Model as Struct_CF_Model
 from Struct_Model import Struct_GUI_Model as Struct_GUI_Model
 import pickle
+import cPickle
 from datetime import datetime
 from Config import Config
 
@@ -984,29 +985,29 @@ class Orcas_Wrapper(Tkinter.Frame):
 			bg = Config.Orcas_blue)
 		self.stratspage_display_group_button.pack(side = 'left',anchor = 'w')
 
-		def save_group_rule():
-			self.mappingrule_settings.get_all(dict_type =True)
-			mapping_rule_df = pd.DataFrame(self.mappingrule_settings.res)
+		# def save_group_rule(mappingrule_settings):
+		# 	mappingrule_settings.get_all(dict_type =True)
+		# 	mapping_rule_df = pd.DataFrame(mappingrule_settings.res)
 
-			mapping_rule_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in
-				zip(Config.mappingrule_settings_columns_gui,Config.mappingrule_settings_columns_txt)])
-			mapping_rule_df = mapping_rule_df.rename(columns = mapping_rule_columns)
-			mapping_rule_df = mapping_rule_df[Config.mappingrule_settings_columns_txt]
+		# 	mapping_rule_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in
+		# 		zip(Config.mappingrule_settings_columns_gui,Config.mappingrule_settings_columns_txt)])
+		# 	mapping_rule_df = mapping_rule_df.rename(columns = mapping_rule_columns)
+		# 	mapping_rule_df = mapping_rule_df[Config.mappingrule_settings_columns_txt]
 
-			sql_query = "INSERT INTO [Strats_GroupRule_Mapping] ([Rule_Idx], [Lower_Bound], [Upper_Bound], [Label]) "
+		# 	sql_query = "INSERT INTO [Strats_GroupRule_Mapping] ([Rule_Idx], [Lower_Bound], [Upper_Bound], [Label]) "
 
-			insert_value = ""
-			(row_num, col_num) = mapping_rule_df.shape
+		# 	insert_value = ""
+		# 	(row_num, col_num) = mapping_rule_df.shape
 
-			for i in range(0, row_num):
-				if (len(mapping_rule_df.iloc[i][0]) + len(mapping_rule_df.iloc[i][1]) + len(mapping_rule_df.iloc[i][2])
-					+ len(mapping_rule_df.iloc[i][3])) != 0:
-					insert_value = insert_value + "(" + "'" + mapping_rule_df.iloc[i][0] + "'" + ", " + "'" + mapping_rule_df.iloc[i][1] + "'" + ", " + "'" + mapping_rule_df.iloc[i][2] + "'" + ", '" + mapping_rule_df.iloc[i][3] + "')"
-				if i != row_num - 1:
-					insert_value = insert_value + ","	
+		# 	for i in range(0, row_num):
+		# 		if (len(mapping_rule_df.iloc[i][0]) + len(mapping_rule_df.iloc[i][1]) + len(mapping_rule_df.iloc[i][2])
+		# 			+ len(mapping_rule_df.iloc[i][3])) != 0:
+		# 			insert_value = insert_value + "(" + "'" + mapping_rule_df.iloc[i][0] + "'" + ", " + "'" + mapping_rule_df.iloc[i][1] + "'" + ", " + "'" + mapping_rule_df.iloc[i][2] + "'" + ", '" + mapping_rule_df.iloc[i][3] + "')"
+		# 		if i != row_num - 1:
+		# 			insert_value = insert_value + ","	
 
-			sql_query = sql_query + "VALUES " + insert_value
-			IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 0, database = Config.orcas_operation_db)
+		# 	sql_query = sql_query + "VALUES " + insert_value
+		# 	IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 0, database = Config.orcas_operation_db)
 
 
 		def modify_group_rule():
@@ -1044,7 +1045,8 @@ class Orcas_Wrapper(Tkinter.Frame):
 				title_list_IN = Config.mappingrule_settings_columns_gui, BoxGroup_width_IN = 6, Label_width_IN = 8, add_condition_button_text_IN = u'添加分组',
 				delete_condition_button_text_IN = u'删除分组', style_IN = 'ComboBox')
 
-			self.group_rule_quit_button = Tkinter.Button(self.modify_group_rule_lower_frame, text = "保存", command = save_group_rule)
+			self.group_rule_quit_button = Tkinter.Button(self.modify_group_rule_lower_frame, text = "保存",
+				command = lambda: GUI_Utilities.Group_Rule.save_group_rule(self.mappingrule_settings, Config.mappingrule_settings_columns_gui,Config.mappingrule_settings_columns_txt))
 			self.group_rule_quit_button.pack()
 
 		self.modify_group_rule_button = Tkinter.Button(self.StratsPage_Lower_Frame, text = u"分组调整", command = modify_group_rule, bg = Config.Orcas_blue)
@@ -1549,6 +1551,10 @@ class Orcas_Wrapper(Tkinter.Frame):
 			title_list_IN=Config.vintage_grouping_settings_columns_gui,BoxGroup_width_IN = 6,Label_width_IN = 8, add_condition_button_text_IN = u'添加分组',
 			delete_condition_button_text_IN = u'删除分组',style_IN = 'ComboBox')
 
+		self.vintageanalysis_group_rule_save_button = Tkinter.Button(self.VintageAnalysisPage_right_line_2_new_frame, text = "保存分组",
+			command = lambda: GUI_Utilities.Group_Rule.save_group_rule(self.vintageanalysis_grouping_settings, Config.vintage_grouping_settings_columns_gui,Config.vintage_grouping_settings_columns_txt))
+		self.vintageanalysis_group_rule_save_button.pack()
+		# self.vintageanalysis_group_rule_save_button.pack(side = 'left', anchor = 'w')
 
 
 		def run_vintage_analysis(events = None):
@@ -1745,9 +1751,10 @@ class Orcas_Wrapper(Tkinter.Frame):
 
 			to_be_loaded_VintageAnalysisSettings  = Config.Orcas_dir + '\Vintage\\' + str(vintage_analysis_struct_num) + '-VintageAnalysisSettings.pkl'
 
-			VintageAnalysisSettings_pkl_file = open(to_be_loaded_VintageAnalysisSettings, 'rb')
-			VintageAnalysisSettings = pickle.load(VintageAnalysisSettings_pkl_file)
-			VintageAnalysisSettings_pkl_file.close()
+			# VintageAnalysisSettings_pkl_file = open(to_be_loaded_VintageAnalysisSettings, 'rb')
+			# VintageAnalysisSettings = pickle.load(VintageAnalysisSettings_pkl_file)
+			VintageAnalysisSettings = cPickle.load(open(to_be_loaded_VintageAnalysisSettings, 'r'))
+			# VintageAnalysisSettings_pkl_file.close()
 
 			self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Repayment_Dir.delete('0.0','end')
 			self.vintageanalysis_gui_mgmt.text_Vintageanalysis_Repayment_Dir.insert('end',VintageAnalysisSettings['repayment_dir'])
@@ -1785,9 +1792,10 @@ class Orcas_Wrapper(Tkinter.Frame):
 			# load grouping settings
 			to_be_loaded_VintageAnalysisGroupingSettings  = Config.Orcas_dir + '\Vintage\\' + str(vintage_analysis_struct_num) + '-VintageAnalysisGroupingSettings.pkl'
 
-			vintageanalysis_grouping_pkl_file = open(to_be_loaded_VintageAnalysisGroupingSettings, 'rb')
-			vintageanalysis_grouping = pickle.load(vintageanalysis_grouping_pkl_file)
-			vintageanalysis_grouping_pkl_file.close()
+			# vintageanalysis_grouping_pkl_file = open(to_be_loaded_VintageAnalysisGroupingSettings, 'rb')
+			# vintageanalysis_grouping = pickle.load(vintageanalysis_grouping_pkl_file)
+			# vintageanalysis_grouping_pkl_file.close()
+			vintageanalysis_grouping = cPickle.load(open(to_be_loaded_VintageAnalysisGroupingSettings, 'r'))
 
 			vintageanalysis_grouping_df = pd.DataFrame.from_dict(vintageanalysis_grouping)
 			self.vintageanalysis_dimension_settings.load_settings(vintageanalysis_grouping_df)

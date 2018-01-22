@@ -716,3 +716,31 @@ class Labeled_Entry(Tkinter.Frame):
 	def get(self):
 		return self.entry.get()
 
+class Group_Rule(object):
+	def __init__(self):
+		pass
+
+	@staticmethod
+	def save_group_rule(mappingrule_settings, mappingrule_settings_columns_gui, mappingrule_settings_columns_txt):
+		mappingrule_settings.get_all(dict_type =True)
+		mapping_rule_df = pd.DataFrame(mappingrule_settings.res)
+
+		mapping_rule_columns = dict([(unicode(item_a),unicode(item_b)) for item_a,item_b in
+			zip(mappingrule_settings_columns_gui,mappingrule_settings_columns_txt)])
+		mapping_rule_df = mapping_rule_df.rename(columns = mapping_rule_columns)
+		mapping_rule_df = mapping_rule_df[mappingrule_settings_columns_txt]
+
+		sql_query = "INSERT INTO [Strats_GroupRule_Mapping] ([Rule_Idx], [Lower_Bound], [Upper_Bound], [Label]) "
+
+		insert_value = ""
+		(row_num, col_num) = mapping_rule_df.shape
+
+		for i in range(0, row_num):
+			if (len(mapping_rule_df.iloc[i][0]) + len(mapping_rule_df.iloc[i][1]) + len(mapping_rule_df.iloc[i][2])
+				+ len(mapping_rule_df.iloc[i][3])) != 0:
+				insert_value = insert_value + "(" + "'" + mapping_rule_df.iloc[i][0] + "'" + ", " + "'" + mapping_rule_df.iloc[i][1] + "'" + ", " + "'" + mapping_rule_df.iloc[i][2] + "'" + ", '" + mapping_rule_df.iloc[i][3] + "')"
+			if i != row_num - 1:
+				insert_value = insert_value + ","	
+
+		sql_query = sql_query + "VALUES " + insert_value
+		IO_Utilities.SQL_Util.query_sql_procedure(sql_query, 0, database = Config.orcas_operation_db)
